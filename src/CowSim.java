@@ -1,16 +1,9 @@
 /* CowSim
  * @author Percy Ghenburg
- * @version 1.0.0
+ * @version 1.1.0
 */
 
-/** Version numbers 
- * v0.0.1 Beta release
- * v1.0.0 Full release
- * */
-
-/** Bugs 
- * v1.1.0 is coming, but the new feature, bills, isn't showing up! Try asking for the value of billTime and billTimestep at different points in the game.
- * */
+/** Bugs */
 
 import java.awt.*;
 import java.awt.event.*;
@@ -19,18 +12,17 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class CowSim {
-	private long timeStep; // Milliseconds before updating
+	private long timeStep = 100; // Milliseconds before updating
 	
 	private int money;
 	private int cows;
 	private int milk;
+	private double milkProb;
 	
-	private double milkProb; // Probability of a cow to create a gallon of milk per update
+	private int billTimestep = 600; // Updates before bill must be paid
+	private int billTime = 0; // Updates since bill was last paid
 	
-	private int billTimestep; // Updates before bill must be paid
-	private int billTime; // Updates since bill was last paid
-	
-	public String ENversion = "CowSim v1.0.0"; // TODO Update when version is changed
+	public String ENversion = "CowSim v1.1.0"; // TODO Update when version is changed
 	public String ENsellMilk = "How many gallons? (Type an integer, or 0 to cancel)\n Gallons are worth $3 each.";
 	public String ENsellCows = "How many cows? (Type an integer, or 0 to cancel)\n Cows are worth $50 each.";
 	public String ENbuyCows = "How many cows? (Type an integer, or 0 to cancel)\n Cows are worth $100 each.";
@@ -40,45 +32,78 @@ public class CowSim {
 		cows = 1;
 		milk = 0;
 		milkProb = 0.02;
-		
-		billTimestep = 60000;
-		billTime = 0;
-		
-		timeStep = 100;
 	}
+	
+	/** 
+	 * Gets current amount of money.
+	*/
 	public int getMoney() {
 		return money;
 	}
+	
+	/** 
+	 * Gets current amount of cows.
+	*/
 	public int getCows() {
 		return cows;
 	}
+	
+	/** 
+	 * Gets current amount of milk.
+	*/
 	public int getMilk() {
 		return milk;
 	}
+	
+	/** 
+	 * Sells specified amount of milk.
+	 * @param amount Amount of milk to sell.
+	*/
 	public void sellMilk(int amount) {
 		milk -= amount; // Decrease milk
 		money += (amount * 3); // Increase money
 	}
+	
+	/** 
+	 * Sells specified amount of cows.
+	 * @param amount Amount of cows to sell.
+	*/
 	public void sellCows(int amount) {
 		cows -= amount; // Decrease cows
 		money += (amount * 50); // Increase money
 	}
+	
+	/** 
+	 * Purchases specified amount of cows.
+	 * @param amount Amount of cows to purchase.
+	*/
 	public void buyCows(int amount) {
 		cows += amount; // Decrease cows
 		money -= (amount * 100); // Increase money
 	}
+	
+	/** 
+	 * Updates dairy farm.
+	*/
 	public void update() {
 		double seed = Math.random();
 		double massNoMilkProb = Math.pow(1 - milkProb, cows); // Get probability of no milk from any cows
 		double massMilk = seed - massNoMilkProb; // Get amount of milk from cows
 		billTime++; // Update billTime
+		
 		if (massMilk > 0 && billTime < billTimestep) {
 			milk += Math.ceil(massMilk * 5); // Add milk
 		}
 	}
+	
+	/** 
+	 * Updates GUI.
+	 * @param simulator The simulator to update
+	 * @param ui The JFrame to update
+	*/
 	public void updateGraphics(CowSim simulator, JFrame ui) {
 		// Import images
-		String milkImgname = "carton.png";
+		String milkImgname = "milk.png";
 		Icon milkImg;
 		String cowImgname = "cow.png";
 		Icon cowImg;
@@ -89,11 +114,13 @@ public class CowSim {
 		} catch (IOException e) {
 			milkImg = null;
 		}
+		
 		try {
 			cowImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowImgname)));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			cowImg = null;
 		}
+		
 		try {
 			moneyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(moneyImgname)));
 		} catch (IOException e) {
@@ -131,6 +158,7 @@ public class CowSim {
 				try {
 					amount = Integer.parseInt(JOptionPane.showInputDialog(ENsellCows));
 				} catch (Exception ex) {
+					
 				}
 				if (simulator.getCows() >= amount) {
 					simulator.sellCows(amount);
@@ -161,9 +189,11 @@ public class CowSim {
 						billTime = 0;
 					}
 				} catch (Exception ex) {
+					
 				}
 			}
 		});
+		
 		ui1.add(ui10); // Add buttons to panel
 		ui1.add(ui11);
 		ui1.add(ui12);
@@ -187,12 +217,16 @@ public class CowSim {
 			try {
 				Thread.sleep(timeStep);
 			} catch (Exception e) {
+				
 			}
 		}
 	}
+	
 	public static void main(String args[]) {
 		CowSim player = new CowSim();
 		JFrame frame = new JFrame();
+		
+		
 		player.updateGraphics(player, frame); // Run update loop forever
 	}
 }
