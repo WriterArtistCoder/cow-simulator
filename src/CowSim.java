@@ -1,6 +1,7 @@
-/* CowSim v1.0.0
- * TODO Update when version is changed
- * */
+/* CowSim
+ * @author Percy Ghenburg
+ * @version 1.0.0
+*/
 
 /** Version numbers 
  * v0.0.1 Beta release
