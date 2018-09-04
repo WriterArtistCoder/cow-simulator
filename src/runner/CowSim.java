@@ -25,7 +25,7 @@ public class CowSim {
 	private int cows;
 	private int milk;
 	
-	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest";
+	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page URL
 	
 	static long timeStep = 100; // Milliseconds before updating
 
