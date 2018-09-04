@@ -1,8 +1,10 @@
 package runner;
 /**
  * CowSim is a game that simulates a dairy farm.
+ * 
  * @author WriterArtistCoder (Github user)
- * @version 1.2.0
+ * @version 1.2.1
+ * @since 08/28/2018
 */
 
 /** Ideas */
@@ -33,12 +35,12 @@ public class CowSim {
 	static int billTime = 0; // Updates since bill was last paid
 
 	// English text for game
-	static String ENversion = "CowSim v1.2.0"; // TODO Update when version is changed
+	static String ENversion = "CowSim v1.2.1"; // TODO Update when version is changed
 	
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
 
-	static String ENsavingGame0 = "Your current game address is: ";
+	static String ENsavingGame0 = "Saving game...\n Your current game address is: ";
 	static String ENsavingGame1 = "\n Next time you play, import a game and type in this address!\n This address is a representation of the current state of the game.\n Copy to clipboard?";
 	
 	static String ENsellMilkDialog = "Sell how many gallons? (Type an integer, or 0 to cancel)\n Gallons are worth $3 each.";
@@ -49,12 +51,24 @@ public class CowSim {
 
 	static String ENbuyBillsDialog = "Pay bills? Costs $20. If bills aren't paid your cows won't have milk.";
 
+	/** 
+	 * Creates a CowSim dairy farm instance with the starting supplies of money, milk, and cows.
+	 */
+	
 	public CowSim() {
 		money = 100;
 		cows = 1;
 		milk = 0;
 	}
-
+	
+	/** 
+	 * Creates a CowSim dairy farm instance from the specified amounts of money, milk, and cows.
+	 * 
+	 * @param moneya The amount of money for the simulator to have.
+	 * @param cowsa The amount of cows for the simulator to have.
+	 * @param milka The amount of milk for the simulator to have.
+	 */
+	
 	public CowSim(int moneya, int cowsa, int milka) {
 		money = moneya;
 		cows = cowsa;
@@ -64,7 +78,7 @@ public class CowSim {
 	/**
 	 * Gets current amount of money.
 	 * 
-	 * @returns current amount of money
+	 * @returns The current amount of money.
 	 */
 	public int getMoney() {
 		return money;
@@ -73,7 +87,7 @@ public class CowSim {
 	/**
 	 * Gets current amount of cows.
 	 * 
-	 * @returns current amount of cows
+	 * @returns The current amount of cows.
 	 */
 	public int getCows() {
 		return cows;
@@ -82,7 +96,7 @@ public class CowSim {
 	/**
 	 * Gets current amount of milk.
 	 * 
-	 * @returns current amount of milk
+	 * @returns The current amount of milk.
 	 */
 	public int getMilk() {
 		return milk;
@@ -91,7 +105,7 @@ public class CowSim {
 	/**
 	 * Sells specified amount of milk.
 	 * 
-	 * @param amount Amount of milk to sell.
+	 * @param amount The amount of milk to sell.
 	 */
 	public void sellMilk(int amount) {
 		milk -= amount; // Decrease milk
@@ -101,7 +115,7 @@ public class CowSim {
 	/**
 	 * Sells specified amount of cows.
 	 * 
-	 * @param amount Amount of cows to sell.
+	 * @param amount The amount of cows to sell.
 	 */
 	public void sellCows(int amount) {
 		cows -= amount; // Decrease cows
@@ -111,7 +125,7 @@ public class CowSim {
 	/**
 	 * Purchases specified amount of cows.
 	 * 
-	 * @param amount Amount of cows to purchase.
+	 * @param amount The amount of cows to purchase.
 	 */
 	public void buyCows(int amount) {
 		cows += amount; // Decrease cows
@@ -133,7 +147,7 @@ public class CowSim {
 	}
 
 	/**
-	 * Updates GUI.
+	 * Starts updating game until it is quit.
 	 * 
 	 * @param simulator The simulator to update
 	 * @param ui        The JFrame to update
@@ -336,9 +350,7 @@ public class CowSim {
 	}
 
 	/**
-	 * Launches the specified simulator.
-	 * 
-	 * @param instance The simulator to launch.
+	 * Launches the game.
 	 */
 	public void launch() {
 		JFrame frame = new JFrame();
@@ -397,8 +409,56 @@ public class CowSim {
 		}
 	}
 	
+	/**
+	 * Launches a new game created from a game address.
+	 * 
+	 * @param address The game address to create the game from.
+	 */
+	public static void readAddressAndLaunch(String address) {
+		int dots = 0;
+		String moneya = "";
+		String cowsa = "";
+		String milka = "";
+		
+		try {
+			for (int i = 0; i < address.length(); i++) {
+				if (address.charAt(i) == '.') {
+					dots++;
+				} else if (dots == 0) {
+					moneya += "" + address.charAt(i);
+				} else if (dots == 1) {
+					cowsa += "" + address.charAt(i);
+				} else if (dots == 2) {
+					milka += "" + address.charAt(i);
+				}
+			}
+			
+			new CowSim(Integer.parseInt(moneya)/69, Integer.parseInt(cowsa)/57, Integer.parseInt(milka)/60).launch();
+		} catch (Exception e) {
+			new CowSim().launch();
+		}
+	}
+	
+	/**
+	 * Launches a game, either from a game address or from a new game.
+	 */
+	public static void getInputAndLaunch() {
+		try {
+			String launchType = JOptionPane.showInputDialog(ENlaunchTypeDialog);
+			if (launchType.equalsIgnoreCase("NEW")) {
+				new CowSim().launch();
+			} else if (launchType.equalsIgnoreCase("OPEN")) {
+				readAddress(JOptionPane.showInputDialog(ENlaunchAddressDialog)).launch();
+			} else {
+				getInputAndLaunch();
+			}
+		} catch (Exception e) {
+			System.exit(0);
+		}
+	}
+	
 	public static void main(String[] args) {
-		if (JOptionPane.showConfirmDialog(null, "Go to update page?", null, JOptionPane.YES_NO_OPTION) == 0) {
+		if (JOptionPane.showConfirmDialog(null, "Visit update page? (Your current version is " + ENversion + ")", null, JOptionPane.YES_NO_OPTION) == 0) {
 			try {
 		          URI uri = new URI(updateURL);
 		          java.awt.Desktop.getDesktop().browse(uri);
@@ -407,14 +467,7 @@ public class CowSim {
 		     }
 		}
 		
-		String launchType = JOptionPane.showInputDialog(ENlaunchTypeDialog);
-		if (launchType.equals("NEW")) {
-			new CowSim().launch();
-		} else if (launchType.equals("OPEN")) {
-			readAddress(JOptionPane.showInputDialog(ENlaunchAddressDialog)).launch();
-		} else  {
-			System.exit(0);
-		}
+		getInputAndLaunch();
 	}
 
 }
