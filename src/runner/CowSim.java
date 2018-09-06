@@ -24,9 +24,10 @@ public class CowSim {
 	private int money;
 	private int cows;
 	private int milk;
-	
-	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page URL
-	
+
+	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page
+																									// URL
+
 	static long timeStep = 100; // Milliseconds before updating
 
 	static double milkProb = 0.02;
@@ -36,13 +37,13 @@ public class CowSim {
 
 	// English text for game
 	static String ENversion = "CowSim v1.2.1"; // TODO Update when version is changed
-	
+
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
 
 	static String ENsavingGame0 = "Saving game...\n Your current game address is: ";
 	static String ENsavingGame1 = "\n Next time you play, import a game and type in this address!\n This address is a representation of the current state of the game.\n Copy to clipboard?";
-	
+
 	static String ENsellMilkDialog = "Sell how many gallons? (Type an integer, or 0 to cancel)\n Gallons are worth $3 each.";
 
 	static String ENsellCowsDialog = "Sell how many cows? (Type an integer, or 0 to cancel)\n Cows are worth $50 each.";
@@ -51,24 +52,48 @@ public class CowSim {
 
 	static String ENbuyBillsDialog = "Pay bills? Costs $20. If bills aren't paid your cows won't have milk.";
 
-	/** 
-	 * Creates a CowSim dairy farm instance with the starting supplies of money, milk, and cows.
+	// Image variables for game
+	static String milkImgname = "milk.png";
+	static Icon milkImg;
+	static String milkSellImgname = "sell-milk.png";
+	static Icon milkSellImg;
+
+	static String cowImgname = "cow.png";
+	static Icon cowImg;
+	static String cowSellImgname = "cow-sell.png";
+	static Icon cowSellImg;
+	static String cowBuyImgname = "cow-buy.png";
+	static Icon cowBuyImg;
+
+	static String moneyImgname = "money.png";
+	static Icon moneyImg;
+
+	static String billBuyImgname = "bill-buy.png";
+	static Icon billBuyImg;
+
+	static String saveImgname = "export.png";
+	static Icon saveImg;
+
+	/**
+	 * Creates a CowSim dairy farm instance with the starting supplies of money,
+	 * milk, and cows.
 	 */
-	
+
 	public CowSim() {
 		money = 100;
 		cows = 1;
 		milk = 0;
 	}
-	
-	/** 
-	 * Creates a CowSim dairy farm instance from the specified amounts of money, milk, and cows.
+
+	/**
+	 * Creates a CowSim dairy farm instance from the specified amounts of money,
+	 * milk, and cows.
 	 * 
 	 * @param moneya The amount of money for the simulator to have.
-	 * @param cowsa The amount of cows for the simulator to have.
-	 * @param milka The amount of milk for the simulator to have.
+	 * @param cowsa  The amount of cows for the simulator to have.
+	 * @param milka  The amount of milk for the simulator to have.
 	 */
-	
+
 	public CowSim(int moneya, int cowsa, int milka) {
 		money = moneya;
 		cows = cowsa;
@@ -153,88 +178,17 @@ public class CowSim {
 	 * @param ui        The JFrame to update
 	 */
 	public void updateGraphics(JFrame ui) {
-		// Import images
-		String milkImgname = "milk.png";
-		Icon milkImg;
-		String milkSellImgname = "sell-milk.png";
-		Icon milkSellImg;
-		
-		String cowImgname = "cow.png";
-		Icon cowImg;
-		String cowSellImgname = "cow-sell.png";
-		Icon cowSellImg;
-		String cowBuyImgname = "cow-buy.png";
-		Icon cowBuyImg;
-		
-		String moneyImgname = "money.png";
-		Icon moneyImg;
-		
-		String billBuyImgname = "bill-buy.png";
-		Icon billBuyImg;
-		
-		
-		String saveImgname = "export.png";
-		Icon saveImg;
-		
-		try {
-			milkImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkImgname)));
-		} catch (Exception e) {
-			milkImg = null;
-		}
-		
-		try {
-			milkSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkSellImgname)));
-		} catch (Exception e) {
-			milkSellImg = null;
-		}
-
-		try {
-			cowImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowImgname)));
-		} catch (Exception e) {
-			cowImg = null;
-		}
-		
-		try {
-			cowSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowSellImgname)));
-		} catch (Exception e) {
-			cowSellImg = null;
-		}
-		
-		try {
-			cowBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowBuyImgname)));
-		} catch (Exception e) {
-			cowBuyImg = null;
-		}
-
-		try {
-			moneyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(moneyImgname)));
-		} catch (Exception e) {
-			moneyImg = null;
-		}
-		
-		try {
-			billBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(billBuyImgname)));
-		} catch (Exception e) {
-			billBuyImg = null;
-		}
-		
-		try {
-			saveImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(saveImgname)));
-		} catch (Exception e) {
-			saveImg = null;
-		}
-		
 		// UI setup
 		JPanel ui0 = new JPanel(); // Tracker panel
 		JPanel ui1 = new JPanel(); // Control panel
-		
+
 		JLabel ui00 = new JLabel(); // Milk tracker
 		ui00.setIcon(milkImg);
 		JLabel ui01 = new JLabel(); // Cow tracker
 		ui01.setIcon(cowImg);
 		JLabel ui02 = new JLabel(); // Money tracker
 		ui02.setIcon(moneyImg);
-		
+
 		JButton ui10 = new JButton(milkSellImg);
 		ui10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -242,14 +196,14 @@ public class CowSim {
 				try {
 					amount = Integer.parseInt(JOptionPane.showInputDialog(ENsellMilkDialog));
 				} catch (Exception ex) {
-					
+
 				}
 				if (getMilk() >= amount) {
 					sellMilk(amount);
 				}
 			}
 		});
-		
+
 		JButton ui11 = new JButton(cowSellImg);
 		ui11.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -264,7 +218,7 @@ public class CowSim {
 				}
 			}
 		});
-		
+
 		JButton ui12 = new JButton(cowBuyImg);
 		ui12.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -272,7 +226,7 @@ public class CowSim {
 				try {
 					amount = Integer.parseInt(JOptionPane.showInputDialog(ENbuyCowsDialog));
 				} catch (Exception ex) {
-					
+
 				}
 				if (getMoney() >= (amount * 100)) {
 					buyCows(amount);
@@ -294,19 +248,19 @@ public class CowSim {
 				}
 			}
 		});
-		
+
 		JButton ui14 = new JButton(saveImg); // Money tracker
 		ui14.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				printAddress();
 			}
 		});
-		
+
 		// Add components to panels
 		ui0.add(ui00);
 		ui0.add(ui01);
 		ui0.add(ui02);
-		
+
 		ui1.add(ui10);
 		ui1.add(ui11);
 		ui1.add(ui12);
@@ -321,16 +275,18 @@ public class CowSim {
 		ui.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		// Show dialog when closing
 		ui.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) { 
-			    if (JOptionPane.showConfirmDialog(null, "Are you sure you want to close the game?", null, JOptionPane.YES_NO_OPTION) == 0) {
-			    	if (JOptionPane.showConfirmDialog(null, "Save before closing?", null, JOptionPane.YES_NO_OPTION) == 0) {
-			    		printAddress();
-				    }
-			    	System.exit(0);
-			    }
+			public void windowClosing(WindowEvent we) {
+				if (JOptionPane.showConfirmDialog(null, "Are you sure you want to close the game?", null,
+						JOptionPane.YES_NO_OPTION) == 0) {
+					if (JOptionPane.showConfirmDialog(null, "Save before closing?", null,
+							JOptionPane.YES_NO_OPTION) == 0) {
+						printAddress();
+					}
+					System.exit(0);
+				}
 			}
 		});
-		
+
 		while (true) {
 			update();
 			ui00.setText("" + getMilk() + ""); // Print amount of milk
@@ -356,28 +312,28 @@ public class CowSim {
 		JFrame frame = new JFrame();
 		updateGraphics(frame);
 	}
-	
+
 	/**
 	 * Gets the current state of the game as a String called the game address.
 	 * 
 	 * @return The game address.
 	 */
 	public String getAddress() {
-		return getMoney()*69 + "." + getCows()*57 + "." + getMilk()*60;
+		return getMoney() * 69 + "." + getCows() * 57 + "." + getMilk() * 60;
 	}
-	
 
 	/**
 	 * Prints the current state of the game as a String called the game address.
 	 */
 	public void printAddress() {
 		StringSelection stringSelection = new StringSelection(getAddress());
-		if (JOptionPane.showConfirmDialog(null, ENsavingGame0 + getAddress() + ENsavingGame1, null, JOptionPane.YES_NO_OPTION) == 0) {
+		if (JOptionPane.showConfirmDialog(null, ENsavingGame0 + getAddress() + ENsavingGame1, null,
+				JOptionPane.YES_NO_OPTION) == 0) {
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			clipboard.setContents(stringSelection, null);
 		}
 	}
-	
+
 	/**
 	 * Returns a new game created from a game address.
 	 * 
@@ -389,7 +345,7 @@ public class CowSim {
 		String moneya = "";
 		String cowsa = "";
 		String milka = "";
-		
+
 		try {
 			for (int i = 0; i < address.length(); i++) {
 				if (address.charAt(i) == '.') {
@@ -402,13 +358,14 @@ public class CowSim {
 					milka += "" + address.charAt(i);
 				}
 			}
-			
-			return new CowSim(Integer.parseInt(moneya)/69, Integer.parseInt(cowsa)/57, Integer.parseInt(milka)/60);
+
+			return new CowSim(Integer.parseInt(moneya) / 69, Integer.parseInt(cowsa) / 57,
+					Integer.parseInt(milka) / 60);
 		} catch (Exception e) {
 			return new CowSim();
 		}
 	}
-	
+
 	/**
 	 * Launches a new game created from a game address.
 	 * 
@@ -419,7 +376,7 @@ public class CowSim {
 		String moneya = "";
 		String cowsa = "";
 		String milka = "";
-		
+
 		try {
 			for (int i = 0; i < address.length(); i++) {
 				if (address.charAt(i) == '.') {
@@ -432,13 +389,14 @@ public class CowSim {
 					milka += "" + address.charAt(i);
 				}
 			}
-			
-			new CowSim(Integer.parseInt(moneya)/69, Integer.parseInt(cowsa)/57, Integer.parseInt(milka)/60).launch();
+
+			new CowSim(Integer.parseInt(moneya) / 69, Integer.parseInt(cowsa) / 57, Integer.parseInt(milka) / 60)
+					.launch();
 		} catch (Exception e) {
 			new CowSim().launch();
 		}
 	}
-	
+
 	/**
 	 * Launches a game, either from a game address or from a new game.
 	 */
@@ -456,17 +414,18 @@ public class CowSim {
 			System.exit(0);
 		}
 	}
-	
+
 	public static void main(String[] args) {
-		if (JOptionPane.showConfirmDialog(null, "Visit update page? (Your current version is " + ENversion + ")", null, JOptionPane.YES_NO_OPTION) == 0) {
+		if (JOptionPane.showConfirmDialog(null, "Visit update page? (Your current version is " + ENversion + ")", null,
+				JOptionPane.YES_NO_OPTION) == 0) {
 			try {
-		          URI uri = new URI(updateURL);
-		          java.awt.Desktop.getDesktop().browse(uri);
-		     } catch (Exception e) {
-		          
-		     }
+				URI uri = new URI(updateURL);
+				java.awt.Desktop.getDesktop().browse(uri);
+			} catch (Exception e) {
+
+			}
 		}
-		
+
 		getInputAndLaunch();
 	}
 
