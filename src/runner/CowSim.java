@@ -3,7 +3,7 @@ package runner;
  * CowSim is a game that simulates a dairy farm.
  * 
  * @author WriterArtistCoder (Github user)
- * @version 1.2.1
+ * @version 1.2.2
  * @since 08/28/2018
 */
 
@@ -25,8 +25,7 @@ public class CowSim {
 	private int cows;
 	private int milk;
 
-	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page
-																									// URL
+	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page URL
 
 	static long timeStep = 100; // Milliseconds before updating
 
@@ -36,7 +35,7 @@ public class CowSim {
 	static int billTime = 0; // Updates since bill was last paid
 
 	// English text for game
-	static String ENversion = "CowSim v1.2.1"; // TODO Update when version is changed
+	static String ENversion = "CowSim v1.2.2"; // TODO Update when version is changed
 
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
