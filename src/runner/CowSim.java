@@ -16,7 +16,6 @@ import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.net.URI;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class CowSim {
