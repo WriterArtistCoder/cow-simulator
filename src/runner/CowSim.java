@@ -31,7 +31,7 @@ public class CowSim {
 	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page
 																									// URL
 
-	static long timeStep = 100; // Milliseconds before updating
+	static long timeStep = 100; // Milliseconds before updating program
 
 	static double milkProb = 0.02;
 
