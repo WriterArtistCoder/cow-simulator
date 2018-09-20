@@ -62,7 +62,10 @@ public class GameWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(sizeX, sizeY));
 		
+		splashPanel0.removeAll();
 		splashPanel0.setVisible(true);
+		
+		splashPanel1.removeAll();
 		splashPanel1.setVisible(true);
 		
 		// Title GUI
