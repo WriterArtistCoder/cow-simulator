@@ -4,7 +4,6 @@ package runner;
  * 
  * @author WriterArtistCoder (Github user)
  * @version 2.0.0
- * @since 08/28/2018
 */
 
 /** Ideas 
@@ -23,9 +22,8 @@ import javax.swing.*;
 public class CowSim {
 
 	public Timer frameRate;
-	
-	private int farmPoints;
 
+	private int farmPoints;
 	private int money;
 	private int cows;
 	private int milk;
@@ -39,11 +37,15 @@ public class CowSim {
 
 	public final static int billTimestep = 1200; // Updates before bill must be paid
 	int billTime = 0; // Updates since bill was last paid
-	
-	public static final int pointsPerLevel = 0; // Points per level
-	
+
+	public static final int pointsPerLevel = 250; // Points per level
+
+	public static final int pointsPerMilk = 2;
+	public static final int pointsPerMilkSell = 5;
+	public static final int pointsPerCowBuy = 20;
+
 	public Font trackerFont;
-	
+
 	public boolean gameWon = false; // Has "You won" pop-up shown yet
 
 	// English text for game
@@ -64,17 +66,17 @@ public class CowSim {
 	static String ENgameNew = "New game";
 	static String ENgameImport = "Import game";
 	static String ENreleasesSee = "Check for updates / See CowSim's Github page";
-	
+
 	static String ENmilk = "Milk";
 	static String ENmilkSell = "Sell milk";
 	static String ENmilkSellAll = "Sell all milk";
-	
+
 	static String ENcow = "Cows";
 	static String ENcowSell = "Sell cows";
 	static String ENcowBuy = "Buy cows";
-	
+
 	static String ENmoney = "Money";
-	
+
 	static String ENfarmpoints = "Farm points to next farm level";
 	static String ENfarmlevel = "Farm level (" + pointsPerLevel + " farm points)";
 
@@ -109,10 +111,10 @@ public class CowSim {
 
 	static String moneyImgname = "money.png";
 	Icon moneyImg;
-	
+
 	static String farmpointsImgname = "farmpoints.png";
 	Icon farmpointsImg;
-	
+
 	static String farmlevelImgname = "farmlevel.png";
 	Icon farmlevelImg;
 
@@ -129,11 +131,11 @@ public class CowSim {
 
 	public CowSim() {
 		farmPoints = 0;
-		
+
 		money = 100;
 		cows = 1;
 		milk = 0;
-		
+
 		trackerFont = new Font("Monospace", Font.PLAIN, 30);
 	}
 
@@ -142,22 +144,22 @@ public class CowSim {
 	 * milk, and cows.
 	 * 
 	 * @param farmPointsa The amount of farm points for the simulator to have
-	 * @param milka  The amount of milk for the simulator to have
-	 * @param cowsa  The amount of cows for the simulator to have
-	 * @param moneya The amount of money for the simulator to have
-	 * @param youWona  Whether the "You won" pop-up has shown
+	 * @param milka       The amount of milk for the simulator to have
+	 * @param cowsa       The amount of cows for the simulator to have
+	 * @param moneya      The amount of money for the simulator to have
+	 * @param youWona     Whether the "You won" pop-up has shown
 	 */
 
-	public CowSim(int moneya, int cowsa, int milka, int farmPointsa,  boolean gameWona) {
+	public CowSim(int moneya, int cowsa, int milka, int farmPointsa, boolean gameWona) {
 		farmPoints = farmPointsa;
 		money = moneya;
 		cows = cowsa;
 		milk = milka;
 		gameWon = gameWona;
-		
+
 		trackerFont = new Font("Monospace", Font.PLAIN, 40);
 	}
-	
+
 	/**
 	 * Gets current amount of milk.
 	 * 
@@ -175,7 +177,7 @@ public class CowSim {
 	public int getCows() {
 		return cows;
 	}
-	
+
 	/**
 	 * Gets current amount of money.
 	 * 
@@ -184,7 +186,7 @@ public class CowSim {
 	public int getMoney() {
 		return money;
 	}
-	
+
 	/**
 	 * Gets current amount of farm points.
 	 * 
@@ -193,7 +195,6 @@ public class CowSim {
 	public int getFarmPoints() {
 		return farmPoints;
 	}
-	
 
 	/**
 	 * Sells specified amount of milk.
@@ -202,7 +203,8 @@ public class CowSim {
 	 */
 	public void sellMilk(int amount) {
 		milk -= amount; // Decrease milk
-		money += (amount * 3); // Increase money
+		money += amount * 3; // Increase money
+		farmPoints += pointsPerMilkSell * amount;
 	}
 
 	/**
@@ -223,7 +225,7 @@ public class CowSim {
 	public void buyCows(int amount) {
 		cows += amount; // Decrease cows
 		money -= (amount * 100); // Increase money
-		farmPoints += 20;
+		farmPoints += pointsPerCowBuy * amount;
 	}
 
 	/**
@@ -237,9 +239,9 @@ public class CowSim {
 
 		if (massMilk > 0 && billTime < billTimestep) {
 			milk += Math.ceil(massMilk * 5); // Add milk
-			farmPoints += 2;
+			farmPoints += pointsPerMilk;
 		}
-		
+
 		if (cows >= 100 && !gameWon) {
 			JOptionPane.showMessageDialog(null, "You won! Continue playing or quit.");
 			gameWon = true;
@@ -255,11 +257,13 @@ public class CowSim {
 			logoImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(logoImgname)));
 			gameNewImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameNewImgname)));
 			gameImportImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameImportImgname)));
-			releasesSeeImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(releasesSeeImgname)));
+			releasesSeeImg = new ImageIcon(
+					ImageIO.read(new CowSim().getClass().getResourceAsStream(releasesSeeImgname)));
 
 			milkImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkImgname)));
 			milkSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkSellImgname)));
-			milkSellAllImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkSellAllImgname)));
+			milkSellAllImg = new ImageIcon(
+					ImageIO.read(new CowSim().getClass().getResourceAsStream(milkSellAllImgname)));
 			cowImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowImgname)));
 			cowSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowSellImgname)));
 			cowBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowBuyImgname)));
@@ -291,22 +295,26 @@ public class CowSim {
 		ui00.setIcon(milkImg);
 		ui00.setFont(trackerFont);
 		ui00.setToolTipText(ENmilk);
+
 		JLabel ui01 = new JLabel(); // Cow tracker
 		ui01.setIcon(cowImg);
 		ui01.setFont(trackerFont);
-		ui00.setToolTipText(ENcow);
+		ui01.setToolTipText(ENcow);
+
 		JLabel ui02 = new JLabel(); // Money tracker
 		ui02.setIcon(moneyImg);
 		ui02.setFont(trackerFont);
-		ui00.setToolTipText(ENmoney);
-		JLabel ui03 = new JLabel(); // Farm points tracker
-		ui03.setIcon(farmpointsImg);
-		ui03.setFont(trackerFont);
-		ui00.setToolTipText(ENfarmpoints);
-		JLabel ui04 = new JLabel(); // Farm level tracker
+		ui02.setToolTipText(ENmoney);
+
+		JLabel ui03 = new JLabel(); // Farm level tracker
 		ui03.setIcon(farmlevelImg);
 		ui03.setFont(trackerFont);
-		ui00.setToolTipText(ENfarmlevel);
+		ui03.setToolTipText(ENfarmlevel);
+
+		JLabel ui04 = new JLabel(); // Farm points tracker
+		ui04.setIcon(farmpointsImg);
+		ui04.setFont(trackerFont);
+		ui04.setToolTipText(ENfarmpoints);
 
 		JButton ui10 = new JButton(milkSellImg);
 		ui10.addActionListener(new ActionListener() {
@@ -323,7 +331,7 @@ public class CowSim {
 			}
 		});
 		ui10.setToolTipText(ENmilkSell);
-		
+
 		JButton ui11 = new JButton(milkSellAllImg);
 		ui11.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -415,20 +423,8 @@ public class CowSim {
 		// Frame setup
 		ui.setTitle(ENversion);
 		ui.setDefaultCloseOperation(GameWindow.DO_NOTHING_ON_CLOSE);
-		// Show dialog when closing
-		ui.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				if (JOptionPane.showConfirmDialog(null, "Are you sure you want to close the game?", null,
-						JOptionPane.YES_NO_OPTION) == 0) {
-					if (JOptionPane.showConfirmDialog(null, "Save before closing?", null,
-							JOptionPane.YES_NO_OPTION) == 0) {
-						simulator.printAddress();
-					}
-					System.exit(0);
-				}
-			}
-		});
-
+		
+		// Frame animation
 		simulator.frameRate = new Timer((int) timeStep, new ActionListener() {
 			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
@@ -437,17 +433,35 @@ public class CowSim {
 				ui01.setText("" + simulator.getCows()); // Print amount of cows
 				ui02.setText("" + simulator.getMoney()); // Print amount of money
 				if (pointsPerLevel > 0) {
-					ui03.setText("" + simulator.getFarmPoints()%pointsPerLevel); // Print amount of farm points
-					ui04.setText("" + (Math.floor(simulator.getFarmPoints()/pointsPerLevel) + 1)); // Print farm level
+					String level = ("" + (Math.floor(simulator.getFarmPoints() / pointsPerLevel) + 1));
+					level = level.substring(0, level.length() - 2);
+
+					ui03.setText(level); // Print farm level
+					ui04.setText("" + simulator.getFarmPoints() % pointsPerLevel); // Print amount of farm points
 				} else {
-					ui03.setText("0"); // Print amount of farm points
-					ui04.setText("1"); // Print farm level
+					ui03.setText("1"); // Print farm level
+					ui04.setText("0"); // Print amount of farm points
 				}
 
 				ui14.setVisible(simulator.billTime >= billTimestep); // Show "Pay bills" button if it's time to pay
 																		// bills
 
 				ui.setMinimumSize(new Dimension(GameWindow.sizeX, GameWindow.sizeY)); // Pack frame
+			}
+		});
+
+		// Show dialog when closing
+		ui.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				if (JOptionPane.showConfirmDialog(null, "Are you sure you want to close the game?", null,
+						JOptionPane.YES_NO_OPTION) == 0) {
+					if (JOptionPane.showConfirmDialog(null, "Save before closing?", null,
+							JOptionPane.YES_NO_OPTION) == 0) {
+						simulator.frameRate.stop();
+						simulator.printAddress();
+					}
+					System.exit(0);
+				}
 			}
 		});
 	}
@@ -490,7 +504,8 @@ public class CowSim {
 	 * @return The game address.
 	 */
 	public String getAddress() {
-		return gameWon + "." + getMoney() * 69 + "." + getCows() * 57 + "." + getMilk() * 60 + "." + getFarmPoints() * 67;
+		return gameWon + "." + getMoney() * 69 + "." + getCows() * 57 + "." + getMilk() * 60 + "."
+				+ getFarmPoints() * 67;
 	}
 
 	/**
@@ -526,7 +541,7 @@ public class CowSim {
 			} else if (address.substring(0, 6).equals("false.")) {
 				address = address.substring(6, address.length());
 			}
-			
+
 			for (int i = 0; i < address.length(); i++) {
 				if (address.charAt(i) == '.') {
 					dots++;
@@ -540,13 +555,13 @@ public class CowSim {
 					farmPointsa += "" + address.charAt(i);
 				}
 			}
-			
+
 			if (farmPointsa.isEmpty()) {
-				farmPointsa = "0";
+				farmPointsa = "" + Integer.parseInt(milka) * pointsPerMilkSell;
 			}
 
-			return new CowSim(Integer.parseInt(moneya) / 69, Integer.parseInt(cowsa) / 57,
-					Integer.parseInt(milka) / 60, Integer.parseInt(farmPointsa) / 67, gameWona);
+			return new CowSim(Integer.parseInt(moneya) / 69, Integer.parseInt(cowsa) / 57, Integer.parseInt(milka) / 60,
+					Integer.parseInt(farmPointsa) / 67, gameWona);
 		} catch (Exception e) {
 			return new CowSim();
 		}
