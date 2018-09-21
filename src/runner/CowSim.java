@@ -136,7 +136,7 @@ public class CowSim {
 		cows = 1;
 		milk = 0;
 
-		trackerFont = new Font("Monospace", Font.PLAIN, 30);
+		trackerFont = new Font("Monospace", Font.PLAIN, 20);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class CowSim {
 		milk = milka;
 		gameWon = gameWona;
 
-		trackerFont = new Font("Monospace", Font.PLAIN, 40);
+		trackerFont = new Font("Monospace", Font.PLAIN, 20);
 	}
 
 	/**
