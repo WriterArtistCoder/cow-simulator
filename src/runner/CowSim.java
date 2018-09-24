@@ -7,7 +7,7 @@ package runner;
 */
 
 /** Ideas 
- * Use  MouseInfo.getPointerInfo().getLocation() to get mouse x and y
+ * Use  MouseInfo.getPointerInfo().getLocation() to get mouse X and Y position
 */
 
 /** Bugs */
