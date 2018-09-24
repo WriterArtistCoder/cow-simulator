@@ -3,7 +3,7 @@ package runner;
  * CowSim is a game that simulates a dairy farm.
  * 
  * @author WriterArtistCoder (Github user)
- * @version 2.0.0
+ * @version 2.1.0
 */
 
 /** Ideas 
@@ -15,7 +15,6 @@ package runner;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
