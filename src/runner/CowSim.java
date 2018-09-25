@@ -8,6 +8,8 @@ package runner;
 
 /** Ideas 
  * Use MouseInfo.getPointerInfo().getLocation() to get mouse X and Y position
+ * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v [REPLACE WITH VERSION] -s [REPLACE WITH VERSION]
+ * Remember to export CowSim to /Users/soda/Desktop/CowSim.jar first!
 */
 
 /** Bugs */
@@ -57,7 +59,7 @@ public class CowSim {
 	public boolean farmersHired = false; // Have farmers been hired
 
 	// English text for game
-	static String ENversion = "CowSim v2.0.0"; // TODO Update when version is changed
+	static String ENversion = "CowSim v2.1.0"; // TODO Update when version is changed
 
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
@@ -102,7 +104,7 @@ public class CowSim {
 	static String ENsave = "Save and quit to title";
 
 	// Image variables for splash and game
-	static String logoImgname = "CowSimLogo_v2.0.0.png";
+	static String logoImgname = "CowSimLogo_v2.1.0.png"; // TODO Update when version is changed
 	Icon logoImg;
 
 	static String gameNewImgname = "game-new.png";
@@ -506,7 +508,7 @@ public class CowSim {
 					ui04.setText("0"); // Print amount of farm points
 				}
 				
-				if (simulator.getFarmLevel() >= 2) {
+				if (simulator.getFarmLevel() >= 2 && !simulator.farmersHired) {
 					ui15.setVisible(true);
 					if (!unlockedBuyFarmersDialogShown) {
 						JOptionPane.showMessageDialog(null, ENunlockedBuyFarmersDialog);
