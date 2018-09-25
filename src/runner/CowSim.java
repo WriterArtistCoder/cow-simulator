@@ -55,7 +55,7 @@ public class CowSim {
 
 	public Font trackerFont;
 
-	public boolean gameWon = false; // Has "You won" pop-up shown yet
+	public boolean gameWon = false; // If "You won" pop-up has shown yet
 	public boolean farmersHired = false; // Have farmers been hired
 
 	// English text for game
