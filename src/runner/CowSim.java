@@ -8,7 +8,7 @@ package runner;
 
 /** Ideas 
  * Use MouseInfo.getPointerInfo().getLocation() to get mouse X and Y position
- * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v [REPLACE WITH VERSION] -s [REPLACE WITH VERSION] -n CowSim [REPLACE WITH VERSION] -d CowSim
+ * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v [REPLACE WITH VERSION] -s [REPLACE WITH VERSION] -n "CowSim [REPLACE WITH VERSION]" -d CowSim
  * Remember to export CowSim to /Users/soda/Desktop/CowSim.jar first!
 */
 
@@ -95,7 +95,7 @@ public class CowSim {
 
 	static String ENmoney = "Money";
 
-	static String ENfarmpoints = "Farm points to next farm level";
+	static String ENfarmpoints = "Farm points";
 	static String ENfarmlevel = "Farm level (" + pointsPerLevel + " farm points)";
 
 	static String ENbillBuy = "Pay bills";
@@ -477,7 +477,7 @@ public class CowSim {
 			}
 		});
 
-		ui15.setToolTipText(ENfarmerSell);
+		ui16.setToolTipText(ENfarmerSell);
 
 		JButton ui17 = new JButton(saveImg); // Money tracker
 		ui17.addActionListener(new ActionListener() {
