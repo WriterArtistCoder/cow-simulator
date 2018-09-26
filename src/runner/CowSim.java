@@ -8,7 +8,7 @@ package runner;
 
 /** Ideas 
  * Use MouseInfo.getPointerInfo().getLocation() to get mouse X and Y position
- * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v [REPLACE WITH VERSION] -s [REPLACE WITH VERSION]
+ * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v [REPLACE WITH VERSION] -s [REPLACE WITH VERSION] -n CowSim [REPLACE WITH VERSION] -d CowSim
  * Remember to export CowSim to /Users/soda/Desktop/CowSim.jar first!
 */
 
@@ -72,11 +72,12 @@ public class CowSim {
 	static String ENbuyCowsDialog = "Buy how many cows? (Type an integer, or 0 to cancel)\n Cows are worth $" + moneyPerBuyCow + " each.";
 	
 	static String ENbuyFarmersDialog = "Do you wish to hire farmers to automate processes such as:\n Selling milk\n Paying bills\n Costs $" + moneyPerBuyFarmer + ".";
+	static String ENsellFarmersDialog = "Do you wish to unemploy your farmers? (No refund.)";
 	static String ENbuyBillsDialog = "Pay bills? Costs $" + moneyPerBuyBill + ". If bills aren't paid your cows won't have milk.";
 	static String ENbrokeDialog = "You are broke and cannot pay your bills!\n If you have some cows, sell them.";
 	
 	// One-time dialogs
-	static String ENunlockedBuyFarmersDialog = "You've unlocked farmers for hire!";
+	static String ENunlockedBuyFarmersDialog = "You've unlocked the \"farmers for hire!\" feature!";
 	public boolean unlockedBuyFarmersDialogShown = false;
 
 	// Tooltip text for splash and game
@@ -100,6 +101,7 @@ public class CowSim {
 	static String ENbillBuy = "Pay bills";
 	
 	static String ENfarmerBuy = "Hire farmers";
+	static String ENfarmerSell = "Unemploy farmers";
 
 	static String ENsave = "Save and quit to title";
 
@@ -142,6 +144,8 @@ public class CowSim {
 	
 	static String farmerBuyImgname = "farmer-buy.png";
 	Icon farmerBuyImg;
+	static String farmerSellImgname = "farmer-sell.png";
+	Icon farmerSellImg;
 
 	static String saveImgname = "export.png";
 	Icon saveImg;
@@ -323,6 +327,7 @@ public class CowSim {
 
 			billBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(billBuyImgname)));
 			farmerBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmerBuyImgname)));
+			farmerSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmerSellImgname)));
 			saveImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(saveImgname)));
 		} catch (Exception e) {
 
@@ -447,6 +452,7 @@ public class CowSim {
 					int yes = JOptionPane.showConfirmDialog(null, ENbuyFarmersDialog, null, JOptionPane.YES_NO_OPTION);
 					if (yes == 0 && simulator.getMoney() >= moneyPerBuyFarmer) {
 						simulator.money -= moneyPerBuyFarmer;
+						simulator.sellMilk(simulator.getMilk());
 						simulator.farmersHired = true;
 					}
 				} catch (Exception ex) {
@@ -456,9 +462,25 @@ public class CowSim {
 		});
 
 		ui15.setToolTipText(ENfarmerBuy);
-
-		JButton ui16 = new JButton(saveImg); // Money tracker
+		
+		JButton ui16 = new JButton(farmerSellImg); // Money tracker
 		ui16.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int yes = JOptionPane.showConfirmDialog(null, ENsellFarmersDialog, null, JOptionPane.YES_NO_OPTION);
+					if (yes == 0) {
+						simulator.farmersHired = false;
+					}
+				} catch (Exception ex) {
+
+				}
+			}
+		});
+
+		ui15.setToolTipText(ENfarmerSell);
+
+		JButton ui17 = new JButton(saveImg); // Money tracker
+		ui17.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				simulator.printAddress();
 				if (JOptionPane.showConfirmDialog(null, "Quit to title screen?") == 0) {
@@ -469,7 +491,7 @@ public class CowSim {
 			}
 		});
 
-		ui16.setToolTipText(ENsave);
+		ui17.setToolTipText(ENsave);
 
 		// Add components to panels
 		ui0.add(ui00);
@@ -485,6 +507,7 @@ public class CowSim {
 		ui1.add(ui14);
 		ui1.add(ui15);
 		ui1.add(ui16);
+		ui1.add(ui17);
 		// Add panels to frames
 		ui.add(ui0, BorderLayout.NORTH);
 		ui.add(ui1, BorderLayout.CENTER);
@@ -494,19 +517,13 @@ public class CowSim {
 		
 		// Frame animation
 		simulator.frameRate = new Timer((int) timeStep, new ActionListener() {
-			@SuppressWarnings("unused")
 			public void actionPerformed(ActionEvent e) {
 				simulator.update();
 				ui00.setText("" + simulator.getMilk()); // Print amount of milk
 				ui01.setText("" + simulator.getCows()); // Print amount of cows
 				ui02.setText("" + simulator.getMoney()); // Print amount of money
-				if (pointsPerLevel > 0) {
-					ui03.setText("" + simulator.getFarmLevel()); // Print farm level
-					ui04.setText("" + simulator.getFarmPoints() % pointsPerLevel); // Print amount of farm points
-				} else {
-					ui03.setText("1"); // Print farm level
-					ui04.setText("0"); // Print amount of farm points
-				}
+				ui03.setText("" + simulator.getFarmLevel()); // Print farm level
+				ui04.setText("" + simulator.getFarmPoints() % pointsPerLevel); // Print amount of farm points
 				
 				if (simulator.getFarmLevel() >= 2 && !simulator.farmersHired) {
 					ui15.setVisible(true);
@@ -520,6 +537,7 @@ public class CowSim {
 				
 				if (farmersHired) {
 					ui14.setVisible(false);
+					ui16.setVisible(true);
 					if (simulator.billTime >= billTimestep) {
 						if (simulator.getMoney() >= moneyPerBuyBill) {
 							buyBill();
@@ -527,7 +545,13 @@ public class CowSim {
 							JOptionPane.showMessageDialog(null, ENbrokeDialog);
 						}
 					}
+					
+					ui10.setVisible(false);
+					ui11.setVisible(false);
 				} else {
+					ui10.setVisible(true);
+					ui11.setVisible(true);
+					ui16.setVisible(false);
 					ui14.setVisible(simulator.billTime >= billTimestep); // Show "Pay bills" button if it's time to pay
 																		// bills
 				}
