@@ -3,7 +3,7 @@ package runner;
  * CowSim is a game that simulates a dairy farm.
  * 
  * @author WriterArtistCoder (Github user)
- * @version 2.1.0
+ * @version 2.1.1
 */
 
 /** Ideas 
@@ -17,6 +17,11 @@ package runner;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -59,13 +64,13 @@ public class CowSim {
 	public boolean farmersHired = false; // Have farmers been hired
 
 	// English text for game
-	static String ENversion = "CowSim v2.1.0"; // TODO Update when version is changed
+	static String ENversion = "CowSim v2.1.1"; // TODO Update when version is changed
 
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
 
 	static String ENsavingGame0 = "Saving game...\n Your current game address is: ";
-	static String ENsavingGame1 = "\n Next time you play, import a game and type in this address!\n This address is a representation of the current state of the game.\n Copy to clipboard?";
+	static String ENsavingGame1 = "\n Next time you play, import a game and type in this address!\n Save as .cowsim?";
 
 	static String ENsellMilkDialog = "Sell how many gallons? (Type an integer, or 0 to cancel)\n Gallons are worth $" + moneyPerSellMilk + " each.";
 	static String ENsellCowsDialog = "Sell how many cows? (Type an integer, or 0 to cancel)\n Cows are worth $" + moneyPerSellCows + " each.";
@@ -82,7 +87,8 @@ public class CowSim {
 
 	// Tooltip text for splash and game
 	static String ENgameNew = "New game";
-	static String ENgameImport = "Import game";
+	static String ENgameImportTxt = "Import game from plain text";
+	static String ENgameImportFile = "Import game from file";
 	static String ENreleasesSee = "Check for updates / See CowSim's Github page";
 
 	static String ENmilk = "Milk";
@@ -106,13 +112,15 @@ public class CowSim {
 	static String ENsave = "Save and quit to title";
 
 	// Image variables for splash and game
-	static String logoImgname = "CowSimLogo_v2.1.0.png"; // TODO Update when version is changed
+	static String logoImgname = "CowSimLogo_v2.1.1.png"; // TODO Update when version is changed
 	Icon logoImg;
 
 	static String gameNewImgname = "game-new.png";
 	Icon gameNewImg;
-	static String gameImportImgname = "game-import.png";
-	Icon gameImportImg;
+	static String gameImportTxtImgname = "game-importtxt.png";
+	Icon gameImportTxtImg;
+	static String gameImportFileImgname = "game-importfile.png";
+	Icon gameImportFileImg;
 	static String releasesSeeImgname = "releases-see.png";
 	Icon releasesSeeImg;
 
@@ -310,7 +318,7 @@ public class CowSim {
 		try {
 			logoImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(logoImgname)));
 			gameNewImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameNewImgname)));
-			gameImportImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameImportImgname)));
+			gameImportTxtImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameImportTxtImgname)));
 			releasesSeeImg = new ImageIcon(
 					ImageIO.read(new CowSim().getClass().getResourceAsStream(releasesSeeImgname)));
 
@@ -622,11 +630,17 @@ public class CowSim {
 	 * Prints the current state of the game as a String called the game address.
 	 */
 	public void printAddress() {
-		StringSelection stringSelection = new StringSelection(getAddress());
+		String address = getAddress();
 		if (JOptionPane.showConfirmDialog(null, ENsavingGame0 + getAddress() + ENsavingGame1, null,
 				JOptionPane.YES_NO_OPTION) == 0) {
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clipboard.setContents(stringSelection, null);
+			try {
+				String[] reader = new File("./saves").list();
+				// Use JFileChooser
+				PrintWriter out = new PrintWriter(new File("./saves/01.cowsim"));
+				out.close();
+			} catch (Exception e) {
+				
+			}
 		}
 	}
 

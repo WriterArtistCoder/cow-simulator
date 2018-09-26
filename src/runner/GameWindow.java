@@ -85,8 +85,8 @@ public class GameWindow extends JFrame {
 
 		splashPanel1.add(newGame);
 
-		JButton importGame = new JButton(imageResource.gameImportImg);
-		importGame.setToolTipText(CowSim.ENgameImport);
+		JButton importGame = new JButton(imageResource.gameImportTxtImg);
+		importGame.setToolTipText(CowSim.ENgameImportTxt);
 		importGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				startGame(CowSim.readAddress(JOptionPane.showInputDialog(CowSim.ENlaunchAddressDialog)));
