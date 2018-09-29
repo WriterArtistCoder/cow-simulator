@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.*;
+import java.io.File;
 import java.net.URI;
+import java.util.Scanner;
 
 import javax.swing.*;
 
@@ -85,15 +87,42 @@ public class GameWindow extends JFrame {
 
 		splashPanel1.add(newGame);
 
-		JButton importGame = new JButton(imageResource.gameImportTxtImg);
-		importGame.setToolTipText(CowSim.ENgameImportTxt);
-		importGame.addActionListener(new ActionListener() {
+		JButton importTxtGame = new JButton(imageResource.gameImportTxtImg);
+		importTxtGame.setToolTipText(CowSim.ENgameImportTxt);
+		importTxtGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				startGame(CowSim.readAddress(JOptionPane.showInputDialog(CowSim.ENlaunchAddressDialog)));
 			}
 		});
 
-		splashPanel1.add(importGame);
+		splashPanel1.add(importTxtGame);
+		
+		JButton importFileGame = new JButton(imageResource.gameImportFileImg);
+		importFileGame.setToolTipText(CowSim.ENgameImportFile);
+		importFileGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					JFileChooser addressChooser = new JFileChooser("./saves");
+					addressChooser.showOpenDialog(null);
+					File addressFile = addressChooser.getSelectedFile();
+					Scanner addressFileReader = new Scanner(addressFile);
+					
+					String address = "";
+					
+					while (addressFileReader.hasNextLine()) {
+		                String line = addressFileReader.nextLine();
+		                address += line;
+		            }
+					
+					addressFileReader.close();
+					startGame(CowSim.readAddress(address));
+				} catch (Exception ex) {
+					
+				}
+			}
+		});
+
+		splashPanel1.add(importFileGame);
 
 		JButton seeReleases = new JButton(imageResource.releasesSeeImg);
 		seeReleases.setToolTipText(CowSim.ENreleasesSee);

@@ -15,13 +15,9 @@ package runner;
 /** Bugs */
 
 import java.awt.*;
-import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileReader;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
-import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -81,13 +77,15 @@ public class CowSim {
 	static String ENbuyBillsDialog = "Pay bills? Costs $" + moneyPerBuyBill + ". If bills aren't paid your cows won't have milk.";
 	static String ENbrokeDialog = "You are broke and cannot pay your bills!\n If you have some cows, sell them.";
 	
+	static String ENsaveNameDialog = "What do you want to save the game as?";
+	
 	// One-time dialogs
 	static String ENunlockedBuyFarmersDialog = "You've unlocked the \"farmers for hire!\" feature!";
 	public boolean unlockedBuyFarmersDialogShown = false;
 
 	// Tooltip text for splash and game
 	static String ENgameNew = "New game";
-	static String ENgameImportTxt = "Import game from plain text";
+	static String ENgameImportTxt = "Import game from game address";
 	static String ENgameImportFile = "Import game from file";
 	static String ENreleasesSee = "Check for updates / See CowSim's Github page";
 
@@ -319,6 +317,7 @@ public class CowSim {
 			logoImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(logoImgname)));
 			gameNewImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameNewImgname)));
 			gameImportTxtImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameImportTxtImgname)));
+			gameImportFileImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(gameImportFileImgname)));
 			releasesSeeImg = new ImageIcon(
 					ImageIO.read(new CowSim().getClass().getResourceAsStream(releasesSeeImgname)));
 
@@ -634,10 +633,16 @@ public class CowSim {
 		if (JOptionPane.showConfirmDialog(null, ENsavingGame0 + getAddress() + ENsavingGame1, null,
 				JOptionPane.YES_NO_OPTION) == 0) {
 			try {
-				String[] reader = new File("./saves").list();
-				// Use JFileChooser
-				PrintWriter out = new PrintWriter(new File("./saves/01.cowsim"));
+				JFileChooser locationChooser = new JFileChooser();
+				locationChooser.showSaveDialog(null);
+				
+				File location = locationChooser.getSelectedFile();
+				
+				PrintWriter out = new PrintWriter(location);
+				out.write(address);
 				out.close();
+				
+				location.renameTo(new File(location.getParent() + "/" + location.getName() + ".cowsim"));
 			} catch (Exception e) {
 				
 			}
