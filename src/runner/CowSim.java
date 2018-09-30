@@ -53,12 +53,15 @@ public class CowSim {
 	public static final int pointsPerMilk = 2;
 	public static final int pointsPerMilkSell = 5;
 	public static final int pointsPerCowBuy = 20;
-	
 
 	public Font trackerFont;
-	
+
 	public int cowPunNum = 0;
-	public String[] cowPuns = new String[]{"Your cow-op will thrive until\n the cows come home!", "Manure great!", "Manure admira-bull!", "You've got some knock-cowt skills!", "Your cow-op will thrive for-heifer!"}; // List of cow puns
+	public String[] cowPuns = new String[] { "Your cow-op will thrive until\n the cows come home!", "Manure great!",
+			"Manure admira-bull!", "You've got some knock-cowt skills!", "Your cow-op will thrive for-heifer!" }; // List
+																													// of
+																													// cow
+																													// puns
 
 	public boolean showPuns = false;
 	public boolean gameWon = false; // If "You won" pop-up has shown yet
@@ -69,7 +72,7 @@ public class CowSim {
 
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
-	
+
 	static String ENshowPunsDialog = "Show cow puns when cows are bought?";
 
 	static String ENsavingGame0 = "Saving game...\n Your current game address is: ";
@@ -130,7 +133,7 @@ public class CowSim {
 	Icon gameImportFileImg;
 	static String releasesSeeImgname = "releases-see.png";
 	Icon releasesSeeImg;
-	
+
 	static String milkImgname = "milk.png";
 	Icon milkImg;
 	static String milkSellAllImgname = "sell-milk-all.png";
@@ -386,7 +389,7 @@ public class CowSim {
 		ui04.setIcon(farmpointsImg);
 		ui04.setFont(trackerFont);
 		ui04.setToolTipText(ENfarmpoints);
-		
+
 		JButton ui10 = new JButton(milkSellAllImg);
 		ui10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -597,7 +600,7 @@ public class CowSim {
 		if (JOptionPane.showConfirmDialog(null, ENshowPunsDialog, null, JOptionPane.YES_NO_OPTION) == 0) {
 			showPuns = true;
 		}
-		
+
 		frameRate.start();
 	}
 
@@ -663,7 +666,7 @@ public class CowSim {
 					location.renameTo(new File(location.getParent() + "/" + location.getName() + ".cowsim"));
 				}
 			} catch (Exception e) {
-				
+
 			}
 		}
 	}
