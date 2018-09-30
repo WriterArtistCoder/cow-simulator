@@ -3,7 +3,7 @@ package runner;
  * CowSim is a game that simulates a dairy farm.
  * 
  * @author WriterArtistCoder (Github user)
- * @version 2.2.1
+ * @version 2.2.0
 */
 
 /** Ideas 
