@@ -493,6 +493,25 @@ public class CowSim {
 
 		ui16.setToolTipText(ENfarmerSell);
 
+		JButton ui17 = new JButton(saveImg); // Save button
+		ui17.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				simulator.frameRate.stop();
+				simulator.printAddress(ui);
+				if (JOptionPane.showConfirmDialog(null, "Quit to title screen?") == 0) {
+					ui.origFile = null;
+					ui.remove(ui0);
+					ui.remove(ui1);
+					ui.setupSplashGUI();
+
+				} else {
+					simulator.frameRate.start();
+				}
+			}
+		});
+
+		ui17.setToolTipText(ENsave);
+
 		// Add components to panels
 		ui0.add(ui00);
 		ui0.add(ui01);
@@ -507,13 +526,13 @@ public class CowSim {
 		ui1.add(ui14);
 		ui1.add(ui15);
 		ui1.add(ui16);
+		ui1.add(ui17);
 		// Add panels to frames
 		ui.add(ui0, BorderLayout.NORTH);
 		ui.add(ui1, BorderLayout.CENTER);
 		// Frame setup
 		ui.setTitle(ENversion);
 		ui.setDefaultCloseOperation(GameWindow.DO_NOTHING_ON_CLOSE);
-
 		// Frame animation
 		simulator.frameRate = new Timer((int) timeStep, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -573,40 +592,6 @@ public class CowSim {
 				}
 			}
 		});
-
-		// Save button
-		JButton ui17 = new JButton(saveImg); // Money tracker
-		ui17.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				simulator.frameRate.stop();
-				simulator.printAddress(ui);
-				if (JOptionPane.showConfirmDialog(null, "Quit to title screen?") == 0) {
-					ui.origFile = null;
-					ui.removeWindowListener(new WindowAdapter() {
-						public void windowClosing(WindowEvent we) {
-							if (JOptionPane.showConfirmDialog(null, "Are you sure you want to close the game?", null,
-									JOptionPane.YES_NO_OPTION) == 0) {
-								if (JOptionPane.showConfirmDialog(null, "Save before closing?", null,
-										JOptionPane.YES_NO_OPTION) == 0) {
-									simulator.frameRate.stop();
-									simulator.printAddress(ui);
-								}
-								System.exit(0);
-							}
-						}
-					});
-					ui.remove(ui0);
-					ui.remove(ui1);
-					ui.setupSplashGUI();
-
-				} else {
-					simulator.frameRate.start();
-				}
-			}
-		});
-
-		ui17.setToolTipText(ENsave);
-		ui1.add(ui17);
 	}
 
 	/**
@@ -680,7 +665,7 @@ public class CowSim {
 					location.renameTo(new File(location.getParent() + "/" + location.getName() + ".cowsim"));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				
 			}
 		}
 	}
