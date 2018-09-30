@@ -65,7 +65,7 @@ public class CowSim {
 	public boolean farmersHired = false; // Have farmers been hired
 
 	// English text for game
-	static String ENversion = "CowSim v2.2.1"; // TODO Update when version is changed
+	static String ENversion = "CowSim v2.2.0"; // TODO Update when version is changed
 
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
@@ -119,7 +119,7 @@ public class CowSim {
 	static String ENsave = "Save as new .cowsim and quit to title";
 
 	// Image variables for splash and game
-	static String logoImgname = "CowSimLogo_v2.2.1.png"; // TODO Update when version is changed
+	static String logoImgname = "CowSimLogo_v2.2.0.png"; // TODO Update when version is changed
 	Icon logoImg;
 
 	static String gameNewImgname = "game-new.png";
