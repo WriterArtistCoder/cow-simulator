@@ -22,6 +22,7 @@ public class GameWindow extends JFrame {
 	public JPanel splashPanel1;
 
 	public CowSim imageResource;
+	public File origFile = null;
 
 	/**
 	 * Creates a GameWindow instance.
@@ -45,11 +46,11 @@ public class GameWindow extends JFrame {
 	 */
 	public void start() {
 		super.setVisible(true);
-		
+
 		setupSplashGUI();
 		add(splashPanel0, BorderLayout.NORTH);
 		add(splashPanel1, BorderLayout.CENTER);
-		
+
 		splashPanel0.repaint();
 		splashPanel1.repaint();
 		setSize(800, 800);
@@ -63,13 +64,13 @@ public class GameWindow extends JFrame {
 	public void setupSplashGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(sizeX, sizeY));
-		
+
 		splashPanel0.removeAll();
 		splashPanel0.setVisible(true);
-		
+
 		splashPanel1.removeAll();
 		splashPanel1.setVisible(true);
-		
+
 		// Title GUI
 		JLabel logo = new JLabel(imageResource.logoImg);
 		logo.setToolTipText(CowSim.ENversion);
@@ -96,28 +97,30 @@ public class GameWindow extends JFrame {
 		});
 
 		splashPanel1.add(importTxtGame);
-		
+
 		JButton importFileGame = new JButton(imageResource.gameImportFileImg);
 		importFileGame.setToolTipText(CowSim.ENgameImportFile);
 		importFileGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JFileChooser addressChooser = new JFileChooser("./saves");
+					JFileChooser addressChooser = new JFileChooser();
 					addressChooser.showOpenDialog(null);
 					File addressFile = addressChooser.getSelectedFile();
+					origFile = addressFile;
+
 					Scanner addressFileReader = new Scanner(addressFile);
-					
+
 					String address = "";
-					
+
 					while (addressFileReader.hasNextLine()) {
-		                String line = addressFileReader.nextLine();
-		                address += line;
-		            }
-					
+						String line = addressFileReader.nextLine();
+						address += line;
+					}
+
 					addressFileReader.close();
 					startGame(CowSim.readAddress(address));
 				} catch (Exception ex) {
-					
+
 				}
 			}
 		});
