@@ -3,7 +3,7 @@ package runner;
  * CowSim is a game that simulates a dairy farm.
  * 
  * @author WriterArtistCoder (Github user)
- * @version 2.2.0
+ * @version 2.2.1
 */
 
 /** Ideas 
@@ -53,23 +53,28 @@ public class CowSim {
 	public static final int pointsPerMilk = 2;
 	public static final int pointsPerMilkSell = 5;
 	public static final int pointsPerCowBuy = 20;
+	
 
 	public Font trackerFont;
+	
+	public int cowPunNum = 0;
+	public String[] cowPuns = new String[]{"Your cow-op will thrive until\n the cows come home!", "Manure great!", "Manure admira-bull!", "You've got some knock-cowt skills!", "Your cow-op will thrive for-heifer!"}; // List of cow puns
 
+	public boolean showPuns = false;
 	public boolean gameWon = false; // If "You won" pop-up has shown yet
 	public boolean farmersHired = false; // Have farmers been hired
 
 	// English text for game
-	static String ENversion = "CowSim v2.2.0"; // TODO Update when version is changed
+	static String ENversion = "CowSim v2.2.1"; // TODO Update when version is changed
 
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
 	static String ENlaunchAddressDialog = "Type in your game address.";
+	
+	static String ENshowPunsDialog = "Show cow puns when cows are bought?";
 
 	static String ENsavingGame0 = "Saving game...\n Your current game address is: ";
 	static String ENsavingGame1 = "\n Next time you play, import a game and type in this address!\n Save as .cowsim?";
 
-	static String ENsellMilkDialog = "Sell how many gallons? (Type an integer, or 0 to cancel)\n Gallons are worth $"
-			+ moneyPerSellMilk + " each.";
 	static String ENsellCowsDialog = "Sell how many cows? (Type an integer, or 0 to cancel)\n Cows are worth $"
 			+ moneyPerSellCows + " each.";
 	static String ENbuyCowsDialog = "Buy how many cows? (Type an integer, or 0 to cancel)\n Cows are worth $"
@@ -95,7 +100,6 @@ public class CowSim {
 	static String ENreleasesSee = "Check for updates / See CowSim's Github page";
 
 	static String ENmilk = "Milk";
-	static String ENmilkSell = "Sell milk";
 	static String ENmilkSellAll = "Sell all milk";
 
 	static String ENcow = "Cows";
@@ -115,7 +119,7 @@ public class CowSim {
 	static String ENsave = "Save as new .cowsim and quit to title";
 
 	// Image variables for splash and game
-	static String logoImgname = "CowSimLogo_v2.2.0.png"; // TODO Update when version is changed
+	static String logoImgname = "CowSimLogo_v2.2.1.png"; // TODO Update when version is changed
 	Icon logoImg;
 
 	static String gameNewImgname = "game-new.png";
@@ -126,11 +130,9 @@ public class CowSim {
 	Icon gameImportFileImg;
 	static String releasesSeeImgname = "releases-see.png";
 	Icon releasesSeeImg;
-
+	
 	static String milkImgname = "milk.png";
 	Icon milkImg;
-	static String milkSellImgname = "sell-milk.png";
-	Icon milkSellImg;
 	static String milkSellAllImgname = "sell-milk-all.png";
 	Icon milkSellAllImg;
 
@@ -329,7 +331,6 @@ public class CowSim {
 					ImageIO.read(new CowSim().getClass().getResourceAsStream(releasesSeeImgname)));
 
 			milkImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkImgname)));
-			milkSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkSellImgname)));
 			milkSellAllImg = new ImageIcon(
 					ImageIO.read(new CowSim().getClass().getResourceAsStream(milkSellAllImgname)));
 			cowImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowImgname)));
@@ -385,33 +386,17 @@ public class CowSim {
 		ui04.setIcon(farmpointsImg);
 		ui04.setFont(trackerFont);
 		ui04.setToolTipText(ENfarmpoints);
-
-		JButton ui10 = new JButton(milkSellImg);
+		
+		JButton ui10 = new JButton(milkSellAllImg);
 		ui10.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int amount = 0;
-				try {
-					amount = Integer.parseInt(JOptionPane.showInputDialog(ENsellMilkDialog));
-				} catch (Exception ex) {
-
-				}
-				if (simulator.getMilk() >= amount) {
-					simulator.sellMilk(amount);
-				}
-			}
-		});
-		ui10.setToolTipText(ENmilkSell);
-
-		JButton ui11 = new JButton(milkSellAllImg);
-		ui11.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				simulator.sellMilk(simulator.getMilk());
 			}
 		});
-		ui11.setToolTipText(ENmilkSellAll);
+		ui10.setToolTipText(ENmilkSellAll);
 
-		JButton ui12 = new JButton(cowSellImg);
-		ui12.addActionListener(new ActionListener() {
+		JButton ui11 = new JButton(cowSellImg);
+		ui11.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int amount = 0;
 				try {
@@ -424,10 +409,10 @@ public class CowSim {
 				}
 			}
 		});
-		ui12.setToolTipText(ENcowSell);
+		ui11.setToolTipText(ENcowSell);
 
-		JButton ui13 = new JButton(cowBuyImg);
-		ui13.addActionListener(new ActionListener() {
+		JButton ui12 = new JButton(cowBuyImg);
+		ui12.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int amount = 0;
 				try {
@@ -437,14 +422,21 @@ public class CowSim {
 				}
 				if (simulator.getMoney() >= (amount * moneyPerBuyCow)) {
 					simulator.buyCows(amount);
+					if (showPuns) {
+						JOptionPane.showMessageDialog(null, cowPuns[cowPunNum]);
+						cowPunNum++;
+						if (cowPunNum == cowPuns.length) {
+							cowPunNum = 0;
+						}
+					}
 				}
 			}
 		});
 
-		ui13.setToolTipText(ENcowBuy);
+		ui12.setToolTipText(ENcowBuy);
 
-		JButton ui14 = new JButton(billBuyImg);
-		ui14.addActionListener(new ActionListener() {
+		JButton ui13 = new JButton(billBuyImg);
+		ui13.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					int yes = JOptionPane.showConfirmDialog(null, ENbuyBillsDialog, null, JOptionPane.YES_NO_OPTION);
@@ -457,10 +449,10 @@ public class CowSim {
 			}
 		});
 
-		ui14.setToolTipText(ENbillBuy);
+		ui13.setToolTipText(ENbillBuy);
 
-		JButton ui15 = new JButton(farmerBuyImg); // Money tracker
-		ui15.addActionListener(new ActionListener() {
+		JButton ui14 = new JButton(farmerBuyImg); // Money tracker
+		ui14.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					int yes = JOptionPane.showConfirmDialog(null, ENbuyFarmersDialog, null, JOptionPane.YES_NO_OPTION);
@@ -475,10 +467,10 @@ public class CowSim {
 			}
 		});
 
-		ui15.setToolTipText(ENfarmerBuy);
+		ui14.setToolTipText(ENfarmerBuy);
 
-		JButton ui16 = new JButton(farmerSellImg); // Money tracker
-		ui16.addActionListener(new ActionListener() {
+		JButton ui15 = new JButton(farmerSellImg); // Money tracker
+		ui15.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					int yes = JOptionPane.showConfirmDialog(null, ENsellFarmersDialog, null, JOptionPane.YES_NO_OPTION);
@@ -491,10 +483,10 @@ public class CowSim {
 			}
 		});
 
-		ui16.setToolTipText(ENfarmerSell);
+		ui15.setToolTipText(ENfarmerSell);
 
-		JButton ui17 = new JButton(saveImg); // Save button
-		ui17.addActionListener(new ActionListener() {
+		JButton ui16 = new JButton(saveImg); // Save button
+		ui16.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				simulator.frameRate.stop();
 				simulator.printAddress(ui);
@@ -510,7 +502,7 @@ public class CowSim {
 			}
 		});
 
-		ui17.setToolTipText(ENsave);
+		ui16.setToolTipText(ENsave);
 
 		// Add components to panels
 		ui0.add(ui00);
@@ -526,7 +518,6 @@ public class CowSim {
 		ui1.add(ui14);
 		ui1.add(ui15);
 		ui1.add(ui16);
-		ui1.add(ui17);
 		// Add panels to frames
 		ui.add(ui0, BorderLayout.NORTH);
 		ui.add(ui1, BorderLayout.CENTER);
@@ -544,18 +535,18 @@ public class CowSim {
 				ui04.setText("" + simulator.getFarmPoints() % pointsPerLevel); // Print amount of farm points
 
 				if (simulator.getFarmLevel() >= 2 && !simulator.farmersHired) {
-					ui15.setVisible(true);
+					ui14.setVisible(true);
 					if (!unlockedBuyFarmersDialogShown) {
 						JOptionPane.showMessageDialog(null, ENunlockedBuyFarmersDialog);
 						unlockedBuyFarmersDialogShown = true;
 					}
 				} else {
-					ui15.setVisible(false);
+					ui14.setVisible(false);
 				}
 
 				if (farmersHired) {
-					ui14.setVisible(false);
-					ui16.setVisible(true);
+					ui13.setVisible(false);
+					ui15.setVisible(true);
 					if (simulator.billTime >= billTimestep) {
 						if (simulator.getMoney() >= moneyPerBuyBill) {
 							buyBill();
@@ -565,12 +556,12 @@ public class CowSim {
 					}
 
 					ui10.setVisible(false);
-					ui11.setVisible(false);
+					ui10.setVisible(false);
 				} else {
 					ui10.setVisible(true);
-					ui11.setVisible(true);
-					ui16.setVisible(false);
-					ui14.setVisible(simulator.billTime >= billTimestep); // Show "Pay bills" button if it's time to pay
+					ui10.setVisible(true);
+					ui15.setVisible(false);
+					ui13.setVisible(simulator.billTime >= billTimestep); // Show "Pay bills" button if it's time to pay
 																			// bills
 				}
 
@@ -603,6 +594,10 @@ public class CowSim {
 	public void startGame(GameWindow frame) {
 		setupGUI(this, frame);
 		frame.setVisible(true);
+		if (JOptionPane.showConfirmDialog(null, ENshowPunsDialog, null, JOptionPane.YES_NO_OPTION) == 0) {
+			showPuns = true;
+		}
+		
 		frameRate.start();
 	}
 
@@ -614,6 +609,9 @@ public class CowSim {
 	 */
 	public void startGameWithoutSetup(GameWindow frame) {
 		frame.setVisible(true);
+		if (JOptionPane.showConfirmDialog(null, ENshowPunsDialog, null, JOptionPane.YES_NO_OPTION) == 0) {
+			showPuns = true;
+		}
 
 		frameRate.start();
 	}
