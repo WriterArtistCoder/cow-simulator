@@ -11,3 +11,4 @@ Versions will be named what best describes the features added, or the next veget
 v1.2.2 - Oops, accidentally commited multiple times. Source code does not match .jar, and release was deleted later.  
 v2.0.0 - Oops, accidentally commited multiple times.  
 v2.2.0 - Oops, accidentally commited multiple times. Also comitted v2.2.1 before commiting v2.2.0, then decided to merge the two... Very confusing, eh?  
+v2.2.1 - Oops, accidentally commited multiple times. Also comitted v2.1.2 before commiting v2.2.1 and after commiting v2.2.0 by accident... Very confusing, eh?  
