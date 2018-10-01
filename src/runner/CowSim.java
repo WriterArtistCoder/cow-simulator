@@ -1,6 +1,8 @@
 package runner;
 /**
- * CowSim is a game that simulates a dairy farm.
+ * CowSim: A Dairy Oddysey is a game that simulates a dairy farm.
+ * See https://github.com/WriterArtistCoder/cow-simulator and
+ * https://github.com/WriterArtistCoder/cow-simulator/wiki for more.
  * 
  * @author WriterArtistCoder (Github user)
  * @version 2.2.1
