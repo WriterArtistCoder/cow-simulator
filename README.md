@@ -1,4 +1,4 @@
-# CowSim (cow-simulator)
+# CowSim: A Dairy Odyssey
 A game that simulates a dairy farm. See [CowSim Wiki](https://github.com/WriterArtistCoder/cow-simulator/wiki) for more on the game, how to install it, etc.  
 This is the master branch of the repository. Go to [the gh-pages branch](https://github.com/WriterArtistCoder/cow-simulator/tree/gh-pages) for the website source code. 
 ## About CowSim
