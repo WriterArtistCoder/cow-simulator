@@ -6,22 +6,21 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class CowSimUpdater {
-	
-	/** 
+
+	/**
 	 * Creates a new CowSimUpdater.
 	 */
 
 	public CowSimUpdater() {
-		
+
 	}
 
 	/**
 	 * Gets the latest CowSim's version number.
 	 * 
-	 * @return The latest CowSim's version number, or an empty string if it
-	 *         fails.
+	 * @return The latest CowSim's version number, or an empty string if it fails.
 	 */
-	
+
 	public static String getCloudVersion() {
 		try {
 			URLConnection con = new URL(CowSim.updateURL).openConnection();
@@ -42,7 +41,7 @@ public class CowSimUpdater {
 	 * 
 	 * @return This CowSim's version number, or or an empty string if it fails.
 	 */
-	
+
 	public static String getLocalVersion() {
 		try {
 			return CowSim.ENversion.substring(7);
@@ -60,20 +59,18 @@ public class CowSimUpdater {
 
 	public static boolean needsUpdating() {
 		boolean needsUpdating = false;
-		
+
 		if (!getCloudVersion().equals(getLocalVersion())) {
 			needsUpdating = true;
 		}
-		
-		
-		
+
 		return needsUpdating;
 	}
 
 	/**
 	 * Downloads the latest CowSim as a JAR file.
 	 **/
-	
+
 	public static void updateAsJar() {
 		try {
 			URLConnection con = new URL(CowSim.updateURL).openConnection();
@@ -89,11 +86,11 @@ public class CowSimUpdater {
 
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Downloads the latest CowSim as a JAR file if the current one is out of date.
 	 */
-	
+
 	public static void updateAsJarIfDated() {
 		if (needsUpdating()) {
 			updateAsJar();

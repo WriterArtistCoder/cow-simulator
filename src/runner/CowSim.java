@@ -71,7 +71,7 @@ public class CowSim {
 
 	// English text for game
 	static String ENversion = "CowSim 2.2.1"; // TODO Update when version is changed
-	
+
 	static String ENupdateDialog = "A new version of CowSim is available.\n Do you wish to download it to your\n default browser's specified downloads folder?";
 
 	static String ENlaunchTypeDialog = "Do you want to create a new game (NEW) or import a game (OPEN)?";
@@ -215,7 +215,7 @@ public class CowSim {
 	 * 
 	 * @returns The current amount of milk
 	 */
-	
+
 	public int getMilk() {
 		return milk;
 	}
@@ -225,7 +225,7 @@ public class CowSim {
 	 * 
 	 * @returns The current amount of cows
 	 */
-	
+
 	public int getCows() {
 		return cows;
 	}
@@ -235,7 +235,7 @@ public class CowSim {
 	 * 
 	 * @returns The current amount of money
 	 */
-	
+
 	public int getMoney() {
 		return money;
 	}
@@ -245,7 +245,7 @@ public class CowSim {
 	 * 
 	 * @returns The current amount of farm points
 	 */
-	
+
 	public int getFarmPoints() {
 		return farmPoints;
 	}
@@ -255,7 +255,7 @@ public class CowSim {
 	 * 
 	 * @returns The current farm level
 	 */
-	
+
 	public int getFarmLevel() {
 		String level = ("" + (Math.floor(getFarmPoints() / pointsPerLevel) + 1));
 		level = level.substring(0, level.length() - 2);
@@ -268,7 +268,7 @@ public class CowSim {
 	 * 
 	 * @param amount The amount of milk to sell
 	 */
-	
+
 	public void sellMilk(int amount) {
 		milk -= amount; // Decrease milk
 		money += moneyPerSellMilk * amount; // Increase money
@@ -280,7 +280,7 @@ public class CowSim {
 	 * 
 	 * @param amount The amount of cows to sell
 	 */
-	
+
 	public void sellCows(int amount) {
 		cows -= amount; // Decrease cows
 		money += moneyPerSellCows * amount; // Increase money
@@ -291,7 +291,7 @@ public class CowSim {
 	 * 
 	 * @param amount The amount of cows to purchase
 	 */
-	
+
 	public void buyCows(int amount) {
 		cows += amount; // Decrease cows
 		money -= moneyPerBuyCow * amount; // Increase money
@@ -312,7 +312,7 @@ public class CowSim {
 	/**
 	 * Updates dairy farm.
 	 */
-	
+
 	public void update() {
 		double seed = Math.random();
 		double massNoMilkProb = Math.pow(1 - milkProb, cows); // Get probability of no milk from any cows
@@ -346,10 +346,8 @@ public class CowSim {
 					ImageIO.read(new CowSim().getClass().getResourceAsStream(gameImportTxtImgname)));
 			gameImportFileImg = new ImageIcon(
 					ImageIO.read(new CowSim().getClass().getResourceAsStream(gameImportFileImgname)));
-			githubSeeImg = new ImageIcon(
-					ImageIO.read(new CowSim().getClass().getResourceAsStream(githubSeeImgname)));
-			wikiSeeImg = new ImageIcon(
-					ImageIO.read(new CowSim().getClass().getResourceAsStream(wikiSeeImgname)));
+			githubSeeImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(githubSeeImgname)));
+			wikiSeeImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(wikiSeeImgname)));
 
 			milkImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(milkImgname)));
 			milkSellAllImg = new ImageIcon(
@@ -376,7 +374,7 @@ public class CowSim {
 	 * @param simulator The simulator to update
 	 * @param ui        The GameWindow to update
 	 */
-	
+
 	public void setupGUI(CowSim simulator, GameWindow ui) {
 		setupImages();
 
@@ -613,7 +611,7 @@ public class CowSim {
 	 * 
 	 * @param frame The GameWindow to launch the game on
 	 */
-	
+
 	public void startGame(GameWindow frame) {
 		setupGUI(this, frame);
 		frame.setVisible(true);
@@ -630,7 +628,7 @@ public class CowSim {
 	 * 
 	 * @param frame The GameWindow to launch the game on
 	 */
-	
+
 	public void startGameWithoutSetup(GameWindow frame) {
 		frame.setVisible(true);
 		if (JOptionPane.showConfirmDialog(null, ENshowPunsDialog, null, JOptionPane.YES_NO_OPTION) == 0) {
@@ -643,7 +641,7 @@ public class CowSim {
 	/**
 	 * Starts the game using a new GameWindow.
 	 */
-	
+
 	public void startGameWithNewWindow() {
 		GameWindow frame = new GameWindow();
 		startGame(frame);
@@ -654,7 +652,7 @@ public class CowSim {
 	 * 
 	 * @return The game address.
 	 */
-	
+
 	public String getAddress() {
 		return gameWon + "." + getMoney() * 69 + "." + getCows() * 57 + "." + getMilk() * 60 + "."
 				+ getFarmPoints() * 67 + "." + farmersHired;
@@ -665,7 +663,7 @@ public class CowSim {
 	 * 
 	 * @param frame The GameWindow that is currently running the game
 	 */
-	
+
 	public void printAddress(GameWindow frame) {
 		String address = getAddress();
 		if (JOptionPane.showConfirmDialog(null, ENsavingGame0 + getAddress() + ENsavingGame1, null,
@@ -700,7 +698,7 @@ public class CowSim {
 	 * @param address The game address to create the game from.
 	 * @return The game created from the address
 	 */
-	
+
 	public static CowSim readAddress(String address) {
 		int dots = 0;
 		String moneya = "";
@@ -756,7 +754,7 @@ public class CowSim {
 	 * 
 	 * @param address The game address to create the game from
 	 */
-	
+
 	public static void readAddressAndLaunch(String address) {
 		readAddress(address).startGameWithNewWindow();
 	}
@@ -767,7 +765,7 @@ public class CowSim {
 	 * @param address The game address to create the game from
 	 * @param frame   The GameWindow to launch the game on
 	 */
-	
+
 	public static void readAddressAndLaunch(String address, GameWindow frame) {
 		readAddress(address).startGame(frame);
 	}
@@ -776,7 +774,7 @@ public class CowSim {
 	 * Launches the user's choice of game, either from a game address or from a new
 	 * game, using a new window.
 	 */
-	
+
 	public static void getInputAndLaunch() {
 		try {
 			String launchType = JOptionPane.showInputDialog(ENlaunchTypeDialog);
@@ -798,7 +796,7 @@ public class CowSim {
 	 * 
 	 * @param frame The GameWindow to launch the game on
 	 */
-	
+
 	public static void getInputAndLaunch(GameWindow frame) {
 		try {
 			String launchType = JOptionPane.showInputDialog(ENlaunchTypeDialog);
@@ -820,7 +818,7 @@ public class CowSim {
 	 * 
 	 * @return The user's choice of game
 	 */
-	
+
 	public static CowSim getInputAndReturn() {
 		try {
 			String launchType = JOptionPane.showInputDialog(ENlaunchTypeDialog);

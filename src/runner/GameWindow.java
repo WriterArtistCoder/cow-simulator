@@ -27,7 +27,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * Creates a GameWindow instance.
 	 */
-	
+
 	public GameWindow() {
 		titleFont = new Font("Arial", Font.PLAIN, 50);
 
@@ -45,7 +45,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * Shows the GameWindow.
 	 */
-	
+
 	public void start() {
 		super.setVisible(true);
 
@@ -142,7 +142,7 @@ public class GameWindow extends JFrame {
 		});
 
 		splashPanel1.add(seeGithub);
-		
+
 		JButton seeWiki = new JButton(imageResource.wikiSeeImg);
 		seeWiki.setToolTipText(CowSim.ENwikiSee);
 		seeWiki.addActionListener(new ActionListener() {
@@ -163,7 +163,7 @@ public class GameWindow extends JFrame {
 	 * 
 	 * @param simulator The game, or "simulator" to launch
 	 */
-	
+
 	public void startGame(CowSim simulator) {
 		simulator.startGame(this);
 		splashPanel0.setVisible(false);
