@@ -4,7 +4,7 @@ package runner;
  * See https://github.com/WriterArtistCoder/cow-simulator and
  * https://github.com/WriterArtistCoder/cow-simulator/wiki for more.
  * 
- * @author WriterArtistCoder (Github user)
+ * @author Github user WriterArtistCoder
  * @version 2.2.1
 */
 
