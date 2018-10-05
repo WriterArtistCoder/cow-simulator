@@ -61,7 +61,7 @@ public class CowSim {
 	public static final int pointsPerMilkSell = 5;
 	public static final int pointsPerCowBuy = 20;
 
-	public static final double meadowsPerCow = 0.05;
+	public static final double meadowsPerCow = 0.1;
 
 	public Font trackerFont;
 
@@ -124,6 +124,9 @@ public class CowSim {
 	static String ENcowSell = "Sell cows";
 	static String ENcowBuy = "Buy cows";
 
+	static String ENmeadow = "Meadows";
+	static String ENmeadowBuy = "Buy meadows";
+
 	static String ENmoney = "Money";
 
 	static String ENfarmpoints = "Farm points";
@@ -163,6 +166,8 @@ public class CowSim {
 	static String cowBuyImgname = "cow-buy.png";
 	Icon cowBuyImg;
 
+	static String meadowImgname = "meadow.png"; // ADD meadowImg to setupImages, then add the meadow counter
+	Icon meadowImg;
 	static String meadowBuyImgname = "meadow-buy.png";
 	Icon meadowBuyImg;
 
@@ -395,9 +400,9 @@ public class CowSim {
 			cowImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowImgname)));
 			cowSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowSellImgname)));
 			cowBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowBuyImgname)));
-			
+
 			meadowBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(meadowBuyImgname)));
-			
+
 			moneyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(moneyImgname)));
 			farmpointsImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmpointsImgname)));
 			farmlevelImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmlevelImgname)));
@@ -503,13 +508,14 @@ public class CowSim {
 				int amount = 0;
 				try {
 					amount = Integer.parseInt(JOptionPane.showInputDialog(ENbuyMeadowsDialog));
-					
+
 					simulator.buyMeadows(amount);
 				} catch (Exception ex) {
 
 				}
 			}
 		});
+		ui13.setToolTipText(ENmeadowBuy);
 
 		JButton ui14 = new JButton(billBuyImg);
 		ui14.addActionListener(new ActionListener() {
