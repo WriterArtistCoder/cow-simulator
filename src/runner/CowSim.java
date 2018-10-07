@@ -1,6 +1,6 @@
 package runner;
 /**
- * CowSim: A Dairy Oddysey is a game that simulates a dairy farm.
+ * CowSim: A Dairy Odyssey is a game that simulates a dairy farm.
  * See https://github.com/WriterArtistCoder/cow-simulator and
  * https://github.com/WriterArtistCoder/cow-simulator/wiki for more.
  * 
@@ -29,11 +29,17 @@ public class CowSim {
 	public Timer frameRate;
 
 	private int meadows;
-	private int farmPoints;
 	private int money;
 	private int cows;
 	private int milk;
 
+	// Encryption keys
+	private static final int encryptionKeyMoney = 69;
+	private static final int encryptionKeyCows = 57;
+	private static final int encryptionKeyMilk = 60;
+	private static final int encryptionKeyMeadows = 79;
+
+	// URLs
 	static String githubURL = "https://github.com/WriterArtistCoder/cow-simulator"; // The Github page URL
 	static String wikiURL = "https://github.com/WriterArtistCoder/cow-simulator/wiki"; // The wiki page URL
 	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page
@@ -53,7 +59,6 @@ public class CowSim {
 	public static final int moneyPerBuyMeadow = 20;
 
 	public static final int moneyPerBuyBill = 20;
-	public static final int moneyPerBuyFarmer = 50;
 
 	public static final int pointsPerLevel = 250; // Points per level
 
@@ -74,7 +79,6 @@ public class CowSim {
 
 	public boolean showPuns = false;
 	public boolean gameWon = false; // If "You won" pop-up has shown yet
-	public boolean farmersHired = false; // Have farmers been hired
 
 	// English text for game
 	static String ENversion = "CowSim 2.2.2";
@@ -86,8 +90,7 @@ public class CowSim {
 
 	static String ENshowPunsDialog = "Show cow puns when cows are bought?";
 
-	static String ENsavingGame0 = "Saving game...\n Your current game address is: ";
-	static String ENsavingGame1 = "\n Next time you play, import a game and type in this address!\n Save as .cowsim?";
+	static String ENsaveGame = "Saving game...\n Save game and quit to title screen (YES) or skip\n saving, lose your progress, and only quit to title screen (NO)?";
 
 	static String ENsellCowsDialog = "Sell how many cows? (Type an integer, or type 0 to cancel)\n Cows are worth $"
 			+ moneyPerSellCows + " each.";
@@ -96,19 +99,11 @@ public class CowSim {
 
 	static String ENbuyMeadowsDialog = "Buy how many meadows? (Type an integer, or type 0 to cancel)\n Meadows are worth $"
 			+ +moneyPerBuyMeadow + " each and each herd of 10 cows\n needs one meadow.";
-
-	static String ENbuyFarmersDialog = "Do you wish to hire farmers to automate processes such as:\n Selling milk\n Paying bills\n Costs $"
-			+ moneyPerBuyFarmer + ".";
-	static String ENsellFarmersDialog = "Do you wish to unemploy your farmers? (No refund.)";
 	static String ENbuyBillsDialog = "Pay bills? Costs $" + moneyPerBuyBill
 			+ ". If bills aren't paid your cows won't have milk.";
 	static String ENbrokeDialog = "You are broke and cannot pay your bills!\n If you have some cows, sell them.";
 
-	static String ENsaveNameDialog = "What do you want to save the game as?";
-
-	// One-time dialogs
-	static String ENunlockedBuyFarmersDialog = "You've unlocked the \"farmers for hire!\" feature!";
-	public boolean unlockedBuyFarmersDialogShown = false;
+	static String ENcloseGameDialog = "Are you sure you want to close the game\n without saving? (To save, click the Save button.)";
 
 	// Tooltip text for splash and game
 	static String ENgameNew = "New game";
@@ -129,13 +124,7 @@ public class CowSim {
 
 	static String ENmoney = "Money";
 
-	static String ENfarmpoints = "Farm points";
-	static String ENfarmlevel = "Farm level (" + pointsPerLevel + " farm points)";
-
 	static String ENbillBuy = "Pay bills";
-
-	static String ENfarmerBuy = "Hire farmers";
-	static String ENfarmerSell = "Unemploy farmers";
 
 	static String ENsave = "Save as new .cowsim and quit to title";
 
@@ -166,7 +155,7 @@ public class CowSim {
 	static String cowBuyImgname = "cow-buy.png";
 	Icon cowBuyImg;
 
-	static String meadowImgname = "meadow.png"; // ADD meadowImg to setupImages, then add the meadow counter
+	static String meadowImgname = "meadow.png";
 	Icon meadowImg;
 	static String meadowBuyImgname = "meadow-buy.png";
 	Icon meadowBuyImg;
@@ -174,19 +163,8 @@ public class CowSim {
 	static String moneyImgname = "money.png";
 	Icon moneyImg;
 
-	static String farmpointsImgname = "farmpoints.png";
-	Icon farmpointsImg;
-
-	static String farmlevelImgname = "farmlevel.png";
-	Icon farmlevelImg;
-
 	static String billBuyImgname = "bill-buy.png";
 	Icon billBuyImg;
-
-	static String farmerBuyImgname = "farmer-buy.png";
-	Icon farmerBuyImg;
-	static String farmerSellImgname = "farmer-sell.png";
-	Icon farmerSellImg;
 
 	static String saveImgname = "export.png";
 	Icon saveImg;
@@ -198,7 +176,6 @@ public class CowSim {
 
 	public CowSim() {
 		meadows = 1;
-		farmPoints = 0;
 		money = 100;
 		cows = 1;
 		milk = 0;
@@ -210,22 +187,19 @@ public class CowSim {
 	 * Creates a CowSim dairy farm instance from the specified amounts of money,
 	 * milk, and cows.
 	 * 
-	 * @param farmPointsa The amount of farm points for the simulator to have
-	 * @param milka       The amount of milk for the simulator to have
-	 * @param cowsa       The amount of cows for the simulator to have
-	 * @param moneya      The amount of money for the simulator to have
-	 * @param youWona     Whether the "You won" pop-up has shown
+	 * @param moneya   The amount of money for the simulator to have
+	 * @param cowsa    The amount of cows for the simulator to have
+	 * @param milka    The amount of milk for the simulator to have
+	 * @param gameWona Whether the "Game won" pop-up has shown
+	 * @param meadowsa The amount of meadows for the simulator to have
 	 */
 
-	public CowSim(int moneya, int cowsa, int milka, int farmPointsa, boolean gameWona, boolean farmersHireda,
-			int meadowsa) {
+	public CowSim(int moneya, int cowsa, int milka, boolean gameWona, int meadowsa) {
 		meadows = meadowsa;
-		farmPoints = farmPointsa;
 		money = moneya;
 		cows = cowsa;
 		milk = milka;
 		gameWon = gameWona;
-		farmersHired = farmersHireda;
 
 		trackerFont = new Font("Monospace", Font.PLAIN, 20);
 	}
@@ -261,29 +235,6 @@ public class CowSim {
 	}
 
 	/**
-	 * Gets current amount of farm points.
-	 * 
-	 * @returns The current amount of farm points
-	 */
-
-	public int getFarmPoints() {
-		return farmPoints;
-	}
-
-	/**
-	 * Gets current farm level.
-	 * 
-	 * @returns The current farm level
-	 */
-
-	public int getFarmLevel() {
-		String level = ("" + (Math.floor(getFarmPoints() / pointsPerLevel) + 1));
-		level = level.substring(0, level.length() - 2);
-
-		return Integer.parseInt(level);
-	}
-
-	/**
 	 * Gets current amount of meadows.
 	 * 
 	 * @returns The current amount of meadows
@@ -302,7 +253,6 @@ public class CowSim {
 	public void sellMilk(int amount) {
 		milk -= amount; // Decrease milk
 		money += moneyPerSellMilk * amount; // Increase money
-		farmPoints += pointsPerMilkSell * amount;
 	}
 
 	/**
@@ -323,10 +273,10 @@ public class CowSim {
 	 */
 
 	public void buyCows(int amount) {
-		if (money >= moneyPerBuyCow * amount && meadows >= meadowsPerCow * (cows + amount)) {
+		if (money >= moneyPerBuyCow * amount
+				&& ((double) meadows) >= Math.ceil((double) meadowsPerCow * (cows + amount))) {
 			cows += amount; // Increase cows
 			money -= moneyPerBuyCow * amount; // Decrease money
-			farmPoints += pointsPerCowBuy * amount;
 		}
 	}
 
@@ -338,7 +288,7 @@ public class CowSim {
 
 	public void buyMeadows(int amount) {
 		if (money >= moneyPerBuyMeadow * amount) {
-			meadows += amount; // Increase cows
+			meadows += amount; // Increase meadows
 			money -= moneyPerBuyMeadow * amount; // Decrease money
 		}
 	}
@@ -365,12 +315,7 @@ public class CowSim {
 		billTime++; // Update billTime
 
 		if (massMilk > 0 && billTime < billTimestep) {
-			if (farmersHired) {
-				money += Math.ceil(massMilk * 5) * moneyPerSellMilk;
-			} else {
-				milk += Math.ceil(massMilk * 5); // Add milk
-			}
-			farmPoints += pointsPerMilk;
+			milk += Math.ceil(massMilk * 5); // Add milk
 		}
 
 		if (cows >= 100 && !gameWon) {
@@ -401,18 +346,15 @@ public class CowSim {
 			cowSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowSellImgname)));
 			cowBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(cowBuyImgname)));
 
+			meadowImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(meadowImgname)));
 			meadowBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(meadowBuyImgname)));
 
 			moneyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(moneyImgname)));
-			farmpointsImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmpointsImgname)));
-			farmlevelImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmlevelImgname)));
 
 			billBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(billBuyImgname)));
-			farmerBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmerBuyImgname)));
-			farmerSellImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(farmerSellImgname)));
 			saveImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(saveImgname)));
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -426,34 +368,26 @@ public class CowSim {
 	public void setupGUI(CowSim simulator, GameWindow ui) {
 		setupImages();
 
-		// UI setup (WARNING: Remove all panels when the ENsave button is pressed)
+		// UI setup TODO (REMOVE ALL ADDED PANELS, ui0, ui1, etc... FROM ui WHEN SAVE BUTTON IS CLICKED
 		JPanel ui0 = new JPanel(); // Tracker panel
 		JPanel ui1 = new JPanel(); // Control panel
 
-		JLabel ui00 = new JLabel(); // Milk tracker
+		JLabel ui00 = new JLabel(milkImg); // Milk tracker
 		ui00.setIcon(milkImg);
 		ui00.setFont(trackerFont);
 		ui00.setToolTipText(ENmilk);
 
-		JLabel ui01 = new JLabel(); // Cow tracker
-		ui01.setIcon(cowImg);
+		JLabel ui01 = new JLabel(cowImg); // Cow tracker
 		ui01.setFont(trackerFont);
 		ui01.setToolTipText(ENcow);
 
-		JLabel ui02 = new JLabel(); // Money tracker
-		ui02.setIcon(moneyImg);
+		JLabel ui02 = new JLabel(meadowImg);
 		ui02.setFont(trackerFont);
-		ui02.setToolTipText(ENmoney);
+		ui02.setToolTipText(ENmeadow);
 
-		JLabel ui03 = new JLabel(); // Farm level tracker
-		ui03.setIcon(farmlevelImg);
+		JLabel ui03 = new JLabel(moneyImg); // Money tracker
 		ui03.setFont(trackerFont);
-		ui03.setToolTipText(ENfarmlevel);
-
-		JLabel ui04 = new JLabel(); // Farm points tracker
-		ui04.setIcon(farmpointsImg);
-		ui04.setFont(trackerFont);
-		ui04.setToolTipText(ENfarmpoints);
+		ui03.setToolTipText(ENmoney);
 
 		JButton ui10 = new JButton(milkSellAllImg);
 		ui10.addActionListener(new ActionListener() {
@@ -533,42 +467,8 @@ public class CowSim {
 
 		ui14.setToolTipText(ENbillBuy);
 
-		JButton ui15 = new JButton(farmerBuyImg); // Money tracker
+		JButton ui15 = new JButton(saveImg); // Save button
 		ui15.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					int yes = JOptionPane.showConfirmDialog(null, ENbuyFarmersDialog, null, JOptionPane.YES_NO_OPTION);
-					if (yes == 0 && simulator.getMoney() >= moneyPerBuyFarmer) {
-						simulator.money -= moneyPerBuyFarmer;
-						simulator.sellMilk(simulator.getMilk());
-						simulator.farmersHired = true;
-					}
-				} catch (Exception ex) {
-
-				}
-			}
-		});
-
-		ui15.setToolTipText(ENfarmerBuy);
-
-		JButton ui16 = new JButton(farmerSellImg); // Money tracker
-		ui16.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					int yes = JOptionPane.showConfirmDialog(null, ENsellFarmersDialog, null, JOptionPane.YES_NO_OPTION);
-					if (yes == 0) {
-						simulator.farmersHired = false;
-					}
-				} catch (Exception ex) {
-
-				}
-			}
-		});
-
-		ui16.setToolTipText(ENfarmerSell);
-
-		JButton ui17 = new JButton(saveImg); // Save button
-		ui17.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				simulator.frameRate.stop();
 				simulator.printAddress(ui);
@@ -577,6 +477,7 @@ public class CowSim {
 					ui.remove(ui0);
 					ui.remove(ui1);
 					ui.setupSplashGUI();
+					ui.isSetUp = false;
 
 				} else {
 					simulator.frameRate.start();
@@ -584,14 +485,13 @@ public class CowSim {
 			}
 		});
 
-		ui17.setToolTipText(ENsave);
+		ui15.setToolTipText(ENsave);
 
 		// Add components to panels
 		ui0.add(ui00);
 		ui0.add(ui01);
 		ui0.add(ui02);
 		ui0.add(ui03);
-		ui0.add(ui04);
 
 		ui1.add(ui10);
 		ui1.add(ui11);
@@ -599,8 +499,6 @@ public class CowSim {
 		ui1.add(ui13);
 		ui1.add(ui14);
 		ui1.add(ui15);
-		ui1.add(ui16);
-		ui1.add(ui17);
 		// Add panels to frames
 		ui.add(ui0, BorderLayout.NORTH);
 		ui.add(ui1, BorderLayout.CENTER);
@@ -613,40 +511,11 @@ public class CowSim {
 				simulator.update();
 				ui00.setText("" + simulator.getMilk()); // Print amount of milk
 				ui01.setText("" + simulator.getCows()); // Print amount of cows
-				ui02.setText("" + simulator.getMoney()); // Print amount of money
-				ui03.setText("" + simulator.getFarmLevel()); // Print farm level
-				ui04.setText("" + simulator.getFarmPoints() % pointsPerLevel); // Print amount of farm points
+				ui02.setText("" + simulator.getMeadows()); // Print amount of meadows
+				ui03.setText("" + simulator.getMoney()); // Print amount of money
 
-				if (simulator.getFarmLevel() >= 2 && !simulator.farmersHired) {
-					ui15.setVisible(true);
-					if (!unlockedBuyFarmersDialogShown) {
-						JOptionPane.showMessageDialog(null, ENunlockedBuyFarmersDialog);
-						unlockedBuyFarmersDialogShown = true;
-					}
-				} else {
-					ui15.setVisible(false);
-				}
-
-				if (farmersHired) {
-					ui14.setVisible(false);
-					ui16.setVisible(true);
-					if (simulator.billTime >= billTimestep) {
-						if (simulator.getMoney() >= moneyPerBuyBill) {
-							buyBill();
-						} else {
-							JOptionPane.showMessageDialog(null, ENbrokeDialog);
-						}
-					}
-
-					ui10.setVisible(false);
-					ui10.setVisible(false);
-				} else {
-					ui10.setVisible(true);
-					ui10.setVisible(true);
-					ui16.setVisible(false);
-					ui14.setVisible(simulator.billTime >= billTimestep); // Show "Pay bills" button if it's time to pay
-																			// bills
-				}
+				ui14.setVisible(simulator.billTime >= billTimestep); // Show "Pay bills" button if it's time to pay
+																		// bills
 
 				ui.setMinimumSize(new Dimension(GameWindow.sizeX, GameWindow.sizeY)); // Pack frame
 			}
@@ -655,22 +524,22 @@ public class CowSim {
 		// Show dialog when closing
 		ui.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
-				if (JOptionPane.showConfirmDialog(null, "Are you sure you want to close the game?", null,
-						JOptionPane.YES_NO_OPTION) == 0) {
-					if (JOptionPane.showConfirmDialog(null, "Save before closing?", null,
-							JOptionPane.YES_NO_OPTION) == 0) {
-						simulator.frameRate.stop();
-						simulator.printAddress(ui);
+				if (ui.isSetUp) {
+					if (JOptionPane.showConfirmDialog(null, ENcloseGameDialog, null, JOptionPane.YES_NO_OPTION) == 0) {
+						System.exit(0);
 					}
+				} else {
 					System.exit(0);
 				}
 			}
 		});
+
+		ui.isSetUp = true;
 	}
 
 	/**
 	 * Starts the game using the specified GameWindow. It also sets up the
-	 * GameWindow.
+	 * GameWindow for the game.
 	 * 
 	 * @param frame The GameWindow to launch the game on
 	 */
@@ -687,7 +556,7 @@ public class CowSim {
 
 	/**
 	 * Starts the game using the specified GameWindow. It does not set up the
-	 * GameWindow.
+	 * GameWindow for the game.
 	 * 
 	 * @param frame The GameWindow to launch the game on
 	 */
@@ -717,8 +586,8 @@ public class CowSim {
 	 */
 
 	public String getAddress() {
-		return gameWon + "." + getMoney() * 69 + "." + getCows() * 57 + "." + getMilk() * 60 + "."
-				+ getFarmPoints() * 67 + "." + farmersHired + "." + getMeadows() * 79;
+		return gameWon + "." + getMoney() * encryptionKeyMoney + "." + getCows() * encryptionKeyCows + "."
+				+ getMilk() * encryptionKeyMilk + ".0." + getMeadows() * encryptionKeyMeadows + ".false";
 	}
 
 	/**
@@ -729,8 +598,7 @@ public class CowSim {
 
 	public void printAddress(GameWindow frame) {
 		String address = getAddress();
-		if (JOptionPane.showConfirmDialog(null, ENsavingGame0 + getAddress() + ENsavingGame1, null,
-				JOptionPane.YES_NO_OPTION) == 0) {
+		if (JOptionPane.showConfirmDialog(null, ENsaveGame, null, JOptionPane.YES_NO_OPTION) == 0) {
 			boolean locationIsNull = false;
 			try {
 				JFileChooser locationChooser = new JFileChooser();
@@ -756,7 +624,8 @@ public class CowSim {
 	}
 
 	/**
-	 * Returns a new game created from a game address.
+	 * Returns a new game created from a game address. If the game address is
+	 * invalid it returns a new game.
 	 * 
 	 * @param address The game address to create the game from.
 	 * @return The game created from the address
@@ -767,10 +636,10 @@ public class CowSim {
 		String moneya = "";
 		String cowsa = "";
 		String milka = "";
+		@SuppressWarnings("unused")
 		String farmPointsa = "";
 		String meadowsa = "";
 		boolean gameWona = false;
-		boolean farmersHireda = false;
 
 		try {
 			if (address.substring(0, 5).equals("true.")) {
@@ -780,12 +649,19 @@ public class CowSim {
 				address = address.substring(6, address.length());
 			}
 
-			if (address.substring(address.length() - 5).equals(".true")) {
+			int lastDot = address.lastIndexOf(".");
+			int secondLastDot = address.lastIndexOf(".", lastDot - 1);
+
+			if (address.substring(lastDot).equals(".true")) {
 				address = address.substring(0, address.length() - 5);
-				farmersHireda = true;
-			} else if (address.substring(address.length() - 6).equals(".false")) {
+			} else if (address.substring(lastDot).equals(".false")) {
 				address = address.substring(0, address.length() - 6);
-				farmersHireda = false;
+			}
+
+			if (address.substring(secondLastDot, lastDot).equals(".true")) {
+				address = address.replaceFirst(address.substring(secondLastDot, lastDot), "");
+			} else if (address.substring(secondLastDot, lastDot).equals(".false")) {
+				address = address.replaceFirst(address.substring(secondLastDot, lastDot), "");
 			}
 
 			for (int i = 0; i < address.length(); i++) {
@@ -804,23 +680,23 @@ public class CowSim {
 				}
 			}
 
-			if (farmPointsa.isEmpty()) {
-				farmPointsa = "" + Integer.parseInt(milka) * pointsPerMilkSell;
-			}
-
 			if (meadowsa.isEmpty()) {
-				meadowsa = "1";
+				meadowsa = "" + Math.ceil(((double) (Integer.parseInt(cowsa) / encryptionKeyCows)) * meadowsPerCow)
+						* encryptionKeyMeadows;
+				meadowsa = meadowsa.substring(0, meadowsa.indexOf("."));
 			}
 
-			return new CowSim(Integer.parseInt(moneya) / 69, Integer.parseInt(cowsa) / 57, Integer.parseInt(milka) / 60,
-					Integer.parseInt(farmPointsa) / 67, gameWona, farmersHireda, Integer.parseInt(meadowsa) / 79);
+			return new CowSim(Integer.parseInt(moneya) / encryptionKeyMoney,
+					Integer.parseInt(cowsa) / encryptionKeyCows, Integer.parseInt(milka) / encryptionKeyMilk, gameWona,
+					Integer.parseInt(meadowsa) / encryptionKeyMeadows);
 		} catch (Exception e) {
 			return new CowSim();
 		}
 	}
 
 	/**
-	 * Launches a new game created from a game address, using a new window.
+	 * Launches a new game created from a game address, using a new window. If the
+	 * game address is invalid it launches a new game.
 	 * 
 	 * @param address The game address to create the game from
 	 */
@@ -830,7 +706,8 @@ public class CowSim {
 	}
 
 	/**
-	 * Launches a new game created from a game address.
+	 * Launches a new game created from a game address. If the game address is
+	 * invalid it launches a new game.
 	 * 
 	 * @param address The game address to create the game from
 	 * @param frame   The GameWindow to launch the game on
@@ -842,7 +719,8 @@ public class CowSim {
 
 	/**
 	 * Launches the user's choice of game, either from a game address or from a new
-	 * game, using a new window.
+	 * game, using a new window. If the game address is invalid it launches a new
+	 * game.
 	 */
 
 	public static void getInputAndLaunch() {
@@ -862,7 +740,7 @@ public class CowSim {
 
 	/**
 	 * Launches the user's choice of game, either from a game address or from a new
-	 * game.
+	 * game. If the game address is invalid it launches a new game.
 	 * 
 	 * @param frame The GameWindow to launch the game on
 	 */
@@ -884,7 +762,7 @@ public class CowSim {
 
 	/**
 	 * Returns the user's choice of game, either from a game address or from a new
-	 * game.
+	 * game. If the game address is invalid it returns a new game.
 	 * 
 	 * @return The user's choice of game
 	 */

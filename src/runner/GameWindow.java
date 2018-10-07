@@ -16,6 +16,7 @@ public class GameWindow extends JFrame {
 	final static int sizeX = 600;
 	final static int sizeY = 600;
 
+	public boolean isSetUp = false;
 	public Font titleFont;
 
 	public JPanel splashPanel0;
@@ -94,7 +95,10 @@ public class GameWindow extends JFrame {
 		importTxtGame.setToolTipText(CowSim.ENgameImportTxt);
 		importTxtGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				startGame(CowSim.readAddress(JOptionPane.showInputDialog(CowSim.ENlaunchAddressDialog)));
+				CowSim game = CowSim.readAddress(JOptionPane.showInputDialog(CowSim.ENlaunchAddressDialog));
+				if (!game.getAddress().equals("false.6900.57.0.0.79.false")) {
+					startGame(game);
+				}
 			}
 		});
 
