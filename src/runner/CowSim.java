@@ -10,7 +10,7 @@ package runner;
 
 /** Ideas 
  * Use MouseInfo.getPointerInfo().getLocation() to get mouse X and Y position
- * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v 2.2.2 -s 2.2.2 -n "CowSim: A Dairy Oddysey" -d CowSim
+ * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v 2.2.2 -s 2.2.2 -n "CowSim - A Dairy Oddysey" -d CowSim
  * Remember to export CowSim to /Users/soda/Desktop/CowSim.jar first!
 */
 
