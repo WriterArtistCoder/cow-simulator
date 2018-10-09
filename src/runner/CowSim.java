@@ -5,12 +5,12 @@ package runner;
  * https://github.com/WriterArtistCoder/cow-simulator/wiki for more.
  * 
  * @author Github user WriterArtistCoder
- * @version 2.2.2
+ * @version 2.3.0
 */
 
 /** Ideas 
  * Use MouseInfo.getPointerInfo().getLocation() to get mouse X and Y position
- * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v 2.2.2 -s 2.2.2 -n "CowSim - A Dairy Oddysey" -d CowSim
+ * Use jar2app: jar2app /Users/soda/Desktop/CowSim.jar -i /Users/soda/Desktop/Icons/CowSim/Logo/favicon.icns -o -v 2.3.0 -s 2.3.0 -n "CowSim - A Dairy Odyssey" -d CowSim
  * Remember to export CowSim to /Users/soda/Desktop/CowSim.jar first!
 */
 
@@ -40,25 +40,28 @@ public class CowSim {
 	private static final int encryptionKeyMeadows = 79;
 
 	// URLs
-	static String githubURL = "https://github.com/WriterArtistCoder/cow-simulator"; // The Github page URL
-	static String wikiURL = "https://github.com/WriterArtistCoder/cow-simulator/wiki"; // The wiki page URL
-	static String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The update page
-																									// URL
+	public static final String githubURL = "https://github.com/WriterArtistCoder/cow-simulator"; // The Github page URL
+	public static final String wikiURL = "https://github.com/WriterArtistCoder/cow-simulator/wiki"; // The wiki page URL
+	public static final String updateURL = "https://github.com/WriterArtistCoder/cow-simulator/releases/latest"; // The
+																													// update
+																													// page
+	// URL
 
-	static long timeStep = 100; // Milliseconds before updating program
+	public static final long timeStep = 100; // Milliseconds before updating program
 
 	static double milkProb = 0.02;
 
 	public static final int billTimestep = 1200; // Updates before bill must be paid
-	int billTime = 0; // Updates since bill was last paid
+	public int billTime = 0; // Updates since bill was last paid
 
 	public static final int moneyPerSellMilk = 3;
 	public static final int moneyPerSellCows = 50;
 	public static final int moneyPerBuyCow = 100;
 
 	public static final int moneyPerBuyMeadow = 20;
-
 	public static final int moneyPerBuyBill = 20;
+	public static final int moneyPerBuyWater = 20;
+	public static final int moneyPerBuyFertilizer = 20;
 
 	public static final int pointsPerLevel = 250; // Points per level
 
@@ -81,7 +84,7 @@ public class CowSim {
 	public boolean gameWon = false; // If "You won" pop-up has shown yet
 
 	// English text for game
-	static String ENversion = "CowSim 2.2.2";
+	static String ENversion = "CowSim 2.3.0";
 
 	static String ENupdateDialog = "A new version of CowSim is available.\n Do you wish to download it to your\n default browser's specified downloads folder?";
 
@@ -98,9 +101,13 @@ public class CowSim {
 			+ moneyPerBuyCow + " each and each herd of 10 cows\n needs one meadow.";
 
 	static String ENbuyMeadowsDialog = "Buy how many meadows? (Type an integer, or type 0 to cancel)\n Meadows are worth $"
-			+ +moneyPerBuyMeadow + " each and each herd of 10 cows\n needs one meadow.";
+			+ moneyPerBuyMeadow + " each and each herd of 10 cows\n needs one meadow.";
 	static String ENbuyBillsDialog = "Pay bills? Costs $" + moneyPerBuyBill
 			+ ". If bills aren't paid your cows won't have milk.";
+	static String ENbuyWaterDialog = "Water field? Costs $" + moneyPerBuyWater
+			+ ". If field isn't watered, it will die, and your cows won't have milk.";
+	static String ENbuyFertilizerDialog = "Buy and use how much fertilizer? (Type an integer, or type 0 to cancel)\n Costs $"
+			+ moneyPerBuyFertilizer + " each, and will boost your field's growth,\n therefore boosting your cows' milk.";
 	static String ENbrokeDialog = "You are broke and cannot pay your bills!\n If you have some cows, sell them.";
 
 	static String ENcloseGameDialog = "Are you sure you want to close the game\n without saving? (To save, click the Save button.)";
@@ -124,12 +131,16 @@ public class CowSim {
 
 	static String ENmoney = "Money";
 
+	static String ENfieldQuality = "Field quality";
+	static String ENfieldWater = "Water field";
+	static String ENfieldFertilize = "Fertilize field";
+
 	static String ENbillBuy = "Pay bills";
 
 	static String ENsave = "Save as new .cowsim and quit to title";
 
 	// Image variables for splash and game
-	static String logoImgname = "CowSimLogo_v2.2.2.png";
+	static String logoImgname = "CowSimLogo_v2.3.0.png";
 	Icon logoImg;
 
 	static String gameNewImgname = "game-new.png";
@@ -145,7 +156,7 @@ public class CowSim {
 
 	static String milkImgname = "milk.png";
 	Icon milkImg;
-	static String milkSellAllImgname = "sell-milk-all.png";
+	static String milkSellAllImgname = "milk-sell-all.png";
 	Icon milkSellAllImg;
 
 	static String cowImgname = "cow.png";
@@ -169,6 +180,15 @@ public class CowSim {
 	static String saveImgname = "export.png";
 	Icon saveImg;
 
+	static String fieldQualityImgname = "field-quality.png";
+	Icon fieldQualityImg;
+	static String fieldWaterImgname = "water-buy.png";
+	Icon fieldWaterImg;
+	static String fieldFertilizeImgname = "fertilizer-buy.png";
+	Icon fieldFertilizeImg;
+
+	public Field field;
+
 	/**
 	 * Creates a CowSim dairy farm instance with the starting supplies of money,
 	 * milk, and cows.
@@ -179,6 +199,7 @@ public class CowSim {
 		money = 100;
 		cows = 1;
 		milk = 0;
+		field = new Field();
 
 		trackerFont = new Font("Monospace", Font.PLAIN, 20);
 	}
@@ -200,6 +221,7 @@ public class CowSim {
 		cows = cowsa;
 		milk = milka;
 		gameWon = gameWona;
+		field = new Field();
 
 		trackerFont = new Font("Monospace", Font.PLAIN, 20);
 	}
@@ -315,7 +337,7 @@ public class CowSim {
 		billTime++; // Update billTime
 
 		if (massMilk > 0 && billTime < billTimestep) {
-			milk += Math.ceil(massMilk * 5); // Add milk
+			milk += Math.ceil(massMilk * 5) * (field.getQuality() / Field.defaultQuality); // Add milk
 		}
 
 		if (cows >= 100 && !gameWon) {
@@ -353,6 +375,12 @@ public class CowSim {
 
 			billBuyImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(billBuyImgname)));
 			saveImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(saveImgname)));
+
+			fieldQualityImg = new ImageIcon(
+					ImageIO.read(new CowSim().getClass().getResourceAsStream(fieldQualityImgname)));
+			fieldWaterImg = new ImageIcon(ImageIO.read(new CowSim().getClass().getResourceAsStream(fieldWaterImgname)));
+			fieldFertilizeImg = new ImageIcon(
+					ImageIO.read(new CowSim().getClass().getResourceAsStream(fieldFertilizeImgname)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -368,12 +396,16 @@ public class CowSim {
 	public void setupGUI(CowSim simulator, GameWindow ui) {
 		setupImages();
 
-		// UI setup TODO (REMOVE ALL ADDED PANELS, ui0, ui1, etc... FROM ui WHEN SAVE BUTTON IS CLICKED
+		// UI setup TODO (REMOVE ALL ADDED PANELS, ui0, ui1, etc... FROM ui WHEN SAVE
+		// BUTTON IS CLICKED
 		JPanel ui0 = new JPanel(); // Tracker panel
 		JPanel ui1 = new JPanel(); // Control panel
+		JPanel ui2 = new JPanel(); // Field panel
+		ui2.setForeground(Color.YELLOW);
+		ui2.setBackground(new Color(73, 219, 0));
 
+		// Tracker panel
 		JLabel ui00 = new JLabel(milkImg); // Milk tracker
-		ui00.setIcon(milkImg);
 		ui00.setFont(trackerFont);
 		ui00.setToolTipText(ENmilk);
 
@@ -389,6 +421,7 @@ public class CowSim {
 		ui03.setFont(trackerFont);
 		ui03.setToolTipText(ENmoney);
 
+		// Control panel
 		JButton ui10 = new JButton(milkSellAllImg);
 		ui10.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -476,6 +509,7 @@ public class CowSim {
 					ui.origFile = null;
 					ui.remove(ui0);
 					ui.remove(ui1);
+					ui.remove(ui2);
 					ui.setupSplashGUI();
 					ui.isSetUp = false;
 
@@ -486,6 +520,40 @@ public class CowSim {
 		});
 
 		ui15.setToolTipText(ENsave);
+
+		// Field panel
+		JLabel ui20 = new JLabel(fieldQualityImg); // Quality tracker
+		ui20.setFont(trackerFont);
+		ui20.setToolTipText(ENfieldQuality);
+
+		JButton ui21 = new JButton(fieldWaterImg);
+		ui21.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int yes = JOptionPane.showConfirmDialog(null, ENbuyWaterDialog, null, JOptionPane.YES_NO_OPTION);
+					if (yes == 0) {
+						simulator.field.water(simulator);
+					}
+				} catch (Exception ex) {
+
+				}
+			}
+		});
+		ui21.setToolTipText(ENfieldWater);
+
+		JButton ui22 = new JButton(fieldFertilizeImg);
+		ui22.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int amount = Integer.parseInt(
+							JOptionPane.showInputDialog(null, ENbuyFertilizerDialog, null, JOptionPane.YES_NO_OPTION));
+					simulator.field.fertilize(simulator, amount);
+				} catch (Exception ex) {
+
+				}
+			}
+		});
+		ui22.setToolTipText(ENfieldFertilize);
 
 		// Add components to panels
 		ui0.add(ui00);
@@ -499,9 +567,14 @@ public class CowSim {
 		ui1.add(ui13);
 		ui1.add(ui14);
 		ui1.add(ui15);
+
+		ui2.add(ui20);
+		ui2.add(ui21);
+		ui2.add(ui22);
 		// Add panels to frames
 		ui.add(ui0, BorderLayout.NORTH);
 		ui.add(ui1, BorderLayout.CENTER);
+		ui.add(ui2, BorderLayout.SOUTH);
 		// Frame setup
 		ui.setTitle(ENversion);
 		ui.setDefaultCloseOperation(GameWindow.DO_NOTHING_ON_CLOSE);
@@ -516,6 +589,11 @@ public class CowSim {
 
 				ui14.setVisible(simulator.billTime >= billTimestep); // Show "Pay bills" button if it's time to pay
 																		// bills
+				simulator.field.update();
+				ui20.setText("" + simulator.field.getQuality());
+
+				ui21.setVisible(simulator.field.waterTime >= Field.waterTimestep); // Show "Water field" button if it's
+																					// time to water
 
 				ui.setMinimumSize(new Dimension(GameWindow.sizeX, GameWindow.sizeY)); // Pack frame
 			}
@@ -582,7 +660,7 @@ public class CowSim {
 	/**
 	 * Gets the current state of the game as a String called the game address.
 	 * 
-	 * @return The game address.
+	 * @returns The game address.
 	 */
 
 	public String getAddress() {
@@ -628,7 +706,7 @@ public class CowSim {
 	 * invalid it returns a new game.
 	 * 
 	 * @param address The game address to create the game from.
-	 * @return The game created from the address
+	 * @returns The game created from the address
 	 */
 
 	public static CowSim readAddress(String address) {
@@ -764,7 +842,7 @@ public class CowSim {
 	 * Returns the user's choice of game, either from a game address or from a new
 	 * game. If the game address is invalid it returns a new game.
 	 * 
-	 * @return The user's choice of game
+	 * @returns The user's choice of game
 	 */
 
 	public static CowSim getInputAndReturn() {
