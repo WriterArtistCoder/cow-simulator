@@ -108,6 +108,7 @@ public class CowSim {
 			+ ". If field isn't watered, it will die, and your cows won't have milk.";
 	static String ENbuyFertilizerDialog = "Buy and use how much fertilizer? (Type an integer, or type 0 to cancel)\n Costs $"
 			+ moneyPerBuyFertilizer + " each, and will boost your field's growth,\n therefore boosting your cows' milk.";
+	static String ENfertilizerLimitDialog = "Dude. Way too much fertilizer.";
 	static String ENbrokeDialog = "You are broke and cannot pay your bills!\n If you have some cows, sell them.";
 
 	static String ENcloseGameDialog = "Are you sure you want to close the game\n without saving? (To save, click the Save button.)";
@@ -547,7 +548,11 @@ public class CowSim {
 				try {
 					int amount = Integer.parseInt(
 							JOptionPane.showInputDialog(null, ENbuyFertilizerDialog, null, JOptionPane.YES_NO_OPTION));
-					simulator.field.fertilize(simulator, amount);
+					if ((simulator.field.getFertilizer()+amount) > 1000) {
+						JOptionPane.showMessageDialog(null, ENfertilizerLimitDialog);
+					} else {
+						simulator.field.fertilize(simulator, amount);
+					} 
 				} catch (Exception ex) {
 
 				}
